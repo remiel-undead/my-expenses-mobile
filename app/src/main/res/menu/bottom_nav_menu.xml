@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_payments"
+        android:icon="@drawable/ic_payments_black_24dp"
+        android:title="@string/title_payments" />
+
+    <item
+        android:id="@+id/navigation_templates"
+        android:icon="@drawable/ic_templates_black_24dp"
+        android:title="@string/title_templates" />
+
+    <item
+        android:id="@+id/navigation_categories"
+        android:icon="@drawable/ic_categories_black_24dp"
+        android:title="@string/title_categories" />
+
+</menu>

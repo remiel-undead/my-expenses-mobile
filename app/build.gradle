@@ -16,9 +16,16 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            it.buildConfigField 'String', 'SERVER_URL', "\"${properties.getProperty('serverProdUrl', '')}\""
+        }
+        debug {
+            it.buildConfigField 'String', 'SERVER_URL', "\"${properties.getProperty('serverDevUrl', '')}\""
         }
     }
 }

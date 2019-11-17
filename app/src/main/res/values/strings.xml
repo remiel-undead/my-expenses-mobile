@@ -3,4 +3,10 @@
     <string name="title_payments">Расходы</string>
     <string name="title_templates">Шаблоны</string>
     <string name="title_categories">Категории</string>
+
+    <!-- Login -->
+    <string name="login_button_title">Войти</string>
+    <string name="edittext_login_hint">Логин</string>
+    <string name="edittext_password_hint">Пароль</string>
+    <string name="login_error">Ошибка авторизации</string>
 </resources>

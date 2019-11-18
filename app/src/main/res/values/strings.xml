@@ -9,4 +9,5 @@
     <string name="edittext_login_hint">Логин</string>
     <string name="edittext_password_hint">Пароль</string>
     <string name="login_error">Ошибка авторизации</string>
+    <string name="error_empty">Поле не может быть пустым</string>
 </resources>

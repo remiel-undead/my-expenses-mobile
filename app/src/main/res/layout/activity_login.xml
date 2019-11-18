@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/edittext_password_hint"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@id/loginButton"
         app:layout_constraintTop_toBottomOf="@id/loginEditText"
         app:layout_constraintVertical_chainStyle="packed" />

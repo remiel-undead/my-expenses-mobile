@@ -1,18 +1,16 @@
 package ru.neofusion.undead.myexpenses
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import ru.neofusion.undead.myexpenses.repository.Result
 import ru.neofusion.undead.myexpenses.repository.network.Api
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
+import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -42,16 +40,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initViews() {
         loginButton.setOnClickListener {
-            hideKeyboard()
+            UiHelper.hideKeyboard(this)
             login()
-        }
-    }
-
-    private fun hideKeyboard() {
-        val view = this.currentFocus
-        view?.let { v ->
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-                ?.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }
 
@@ -62,6 +52,13 @@ class LoginActivity : AppCompatActivity() {
             compositeDisposable.add(
                 Api.login(login.toString(), password.toString())
                     .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .map { result ->
+                        if (result is Result.Success) {
+                            AuthHelper.login(this, result.value)
+                        }
+                        result
+                    }
                     .observeOn(Schedulers.single())
                     .doOnSubscribe {
                         // TODO show progress
@@ -69,18 +66,17 @@ class LoginActivity : AppCompatActivity() {
                     .doOnTerminate {
                         // TODO hide progress
                     }
-                    .subscribe({ result: Result<String> ->
+                    .subscribe({ result: Result<String?> ->
                         if (result is Result.Success) {
-                            AuthHelper.login(this, result.value)
                             goToMainActivityAndFinish()
                         } else {
                             val errorMessage = (result as Result.Error).message
-                            snack(errorMessage)
+                            UiHelper.snack(this, errorMessage)
                             Log.e(TAG, errorMessage)
                         }
                     }, { t: Throwable? ->
                         val errorMessage = t?.message ?: getString(R.string.login_error)
-                        snack(errorMessage)
+                        UiHelper.snack(this, errorMessage)
                         Log.e(TAG, errorMessage)
                     })
             )
@@ -90,9 +86,5 @@ class LoginActivity : AppCompatActivity() {
             passwordEditText.takeIf { it.text.isNullOrEmpty() }?.error =
                 getString(R.string.error_empty)
         }
-    }
-
-    private fun snack(message: String) {
-        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
     }
 }

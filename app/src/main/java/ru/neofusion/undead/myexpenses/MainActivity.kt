@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.neofusion.undead.myexpenses.repository.Result
+import ru.neofusion.undead.myexpenses.repository.UnauthorizedException
 import ru.neofusion.undead.myexpenses.repository.network.Api
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
 import ru.neofusion.undead.myexpenses.ui.UiHelper
@@ -55,7 +56,9 @@ class MainActivity : AppCompatActivity() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.newThread())
                         .map { result ->
-                            if (result is Result.Success) {
+                            if (result is Result.Success
+                                || result is Result.Error && result.cause is UnauthorizedException
+                            ) {
                                 AuthHelper.logout(this)
                             }
                             result
@@ -71,9 +74,13 @@ class MainActivity : AppCompatActivity() {
                             if (result is Result.Success) {
                                 goToLoginActivityAndFinish()
                             } else {
-                                val errorMessage = (result as Result.Error).message
+                                result as Result.Error
+                                val errorMessage = result.message
                                 UiHelper.snack(this, errorMessage)
                                 Log.e(TAG, errorMessage)
+                                if (result.cause is UnauthorizedException) {
+                                    goToLoginActivityAndFinish()
+                                }
                             }
                         }, { t: Throwable? ->
                             val errorMessage = t?.message ?: getString(R.string.login_error)

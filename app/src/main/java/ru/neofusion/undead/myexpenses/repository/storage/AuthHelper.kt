@@ -1,8 +1,10 @@
 package ru.neofusion.undead.myexpenses.repository.storage
 
 import android.content.Context
+import android.util.Log
 
 object AuthHelper {
+    private val TAG = AuthHelper::class.java.simpleName
     private const val PREFERENCE_KEY_AUTH_KEY = "auth_key"
 
     private fun getSharedPreferences(context: Context) =
@@ -22,6 +24,7 @@ object AuthHelper {
             putString(PREFERENCE_KEY_AUTH_KEY, authKey)
             apply()
         }
+        Log.d(TAG, "login")
     }
 
     @JvmStatic
@@ -31,5 +34,6 @@ object AuthHelper {
             remove(PREFERENCE_KEY_AUTH_KEY)
             apply()
         }
+        Log.d(TAG, "logout")
     }
 }

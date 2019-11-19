@@ -11,8 +11,8 @@ import ru.neofusion.undead.myexpenses.repository.network.result.Login
 
 interface MyExpensesService {
     @POST("/api/v1/login")
-    fun login(@Body login: Login): Call<ApiResult.ApiSuccess<Key>>
+    fun login(@Body login: Login): Call<ApiResult<Key>>
 
     @GET("/api/v1/logout")
-    fun logout(@Header("API-Key") apiKey: String): Call<ApiResult.ApiSuccess<Nothing>>
+    fun logout(@Header("API-Key") apiKey: String): Call<ApiResult<Nothing>>
 }

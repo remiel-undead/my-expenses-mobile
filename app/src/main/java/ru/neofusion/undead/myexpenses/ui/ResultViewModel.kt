@@ -15,6 +15,7 @@ abstract class ResultViewModel<T : Any?> : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     fun subscribe(context: Context) {
+        compositeDisposable.clear()
         compositeDisposable.add(
             loadData(context)
                 .subscribeOn(Schedulers.io())

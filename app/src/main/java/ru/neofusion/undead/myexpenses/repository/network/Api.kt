@@ -6,16 +6,21 @@ import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.neofusion.undead.myexpenses.BuildConfig
+import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Mapper
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
+import ru.neofusion.undead.myexpenses.repository.network.result.Id
 import ru.neofusion.undead.myexpenses.repository.network.result.Category as ApiCategory
 import ru.neofusion.undead.myexpenses.repository.network.result.Key
 import ru.neofusion.undead.myexpenses.repository.network.result.Login
 import ru.neofusion.undead.myexpenses.repository.network.result.Order
 import ru.neofusion.undead.myexpenses.repository.network.result.Payment as ApiPayment
+import ru.neofusion.undead.myexpenses.repository.network.request.Category as RequestCategory
+import ru.neofusion.undead.myexpenses.repository.network.request.Payment as RequestPayment
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
+import java.math.BigDecimal
 import java.util.*
 
 object Api {
@@ -29,6 +34,7 @@ object Api {
             .addConverterFactory(
                 GsonConverterFactory.create(
                     GsonBuilder()
+                        .serializeNulls()
                         .setDateFormat("yyyy-MM-dd")
                         .create()
                 )
@@ -71,6 +77,30 @@ object Api {
             }
 
     @JvmStatic
+    fun addCategory(
+        context: Context,
+        name: String,
+        parentId: Int?,
+        isHidden: Boolean
+    ): Single<Result<Int>> =
+        Single.fromCallable { AuthHelper.getKey(context) }
+            .map { apiKey ->
+                service.addCategory(
+                    apiKey,
+                    RequestCategory(
+                        name,
+                        parentId,
+                        isHidden
+                    )
+                ).execute()
+            }
+            .map { response ->
+                Mapper.responseToResult<Id, Int>(response) {
+                    it.id
+                }
+            }
+
+    @JvmStatic
     fun getPayments(
         context: Context,
         startDate: Date,
@@ -83,8 +113,8 @@ object Api {
             .map {
                 service.getPayments(
                     it,
-                    startDate,
-                    endDate,
+                    startDate.formatToString(),
+                    endDate.formatToString(),
                     order.value,
                     categoryId,
                     if (useSubCategories) 1 else 0
@@ -103,6 +133,34 @@ object Api {
                             it.cost
                         )
                     }
+                }
+            }
+
+    @JvmStatic
+    fun addPayment(
+        context: Context,
+        category: Int,
+        date: Date,
+        description: String,
+        seller: String,
+        cost: BigDecimal
+    ): Single<Result<Int>> =
+        Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            .map { apiKey ->
+                service.addPayment(
+                    apiKey,
+                    RequestPayment(
+                        category,
+                        date,
+                        description,
+                        seller,
+                        cost.toPlainString()
+                    )
+                ).execute()
+            }
+            .map { response ->
+                Mapper.responseToResult<Id, Int>(response) {
+                    it.id
                 }
             }
 }

@@ -32,4 +32,9 @@ abstract class BaseViewModelFragment<T : Any?> : Fragment() {
             doOnResult(result)
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.subscribe(requireContext())
+    }
 }

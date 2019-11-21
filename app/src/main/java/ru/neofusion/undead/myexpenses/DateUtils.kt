@@ -1,5 +1,6 @@
-package ru.neofusion.undead.myexpenses.ui
+package ru.neofusion.undead.myexpenses
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtils {
@@ -9,4 +10,7 @@ object DateUtils {
         cal.add(type, amount)
         return cal.time
     }
+
+    fun Date.formatToString() =
+        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(this)
 }

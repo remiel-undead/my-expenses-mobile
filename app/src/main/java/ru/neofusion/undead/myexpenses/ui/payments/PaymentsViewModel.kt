@@ -5,12 +5,12 @@ import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.repository.network.Api
 import ru.neofusion.undead.myexpenses.repository.network.result.Order
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
-import ru.neofusion.undead.myexpenses.ui.DateUtils.plus
+import ru.neofusion.undead.myexpenses.DateUtils.plus
 import java.util.*
 
 class PaymentsViewModel : ResultViewModel<List<Payment>>() {
-    private var startDate: Date = Date()
-    private var endDate: Date = Date().plus(Calendar.MONTH, -1)
+    private var startDate: Date = Date().plus(Calendar.MONTH, -1)
+    private var endDate: Date = Date()
     private var order: Order = Order.BY_DATE_ASC
     private var categoryId: Int? = null
     private var useSubCategories: Boolean = true

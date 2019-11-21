@@ -2,8 +2,8 @@ package ru.neofusion.undead.myexpenses.domain
 
 import java.math.BigDecimal
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
+import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 
 class Payment(
     val id: Int,
@@ -14,8 +14,12 @@ class Payment(
     val seller: String?,
     val cost: BigDecimal
 ) {
-    fun getDateFormatted(): String =
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+    fun getDateFormatted(): String = date.formatToString()
 
-    fun getCostToString(): String = DecimalFormat("# ###.00").format(cost)
+    fun getCostToString(): String =
+        DecimalFormat().apply {
+            maximumFractionDigits = 2
+            minimumFractionDigits = 2
+            isGroupingUsed = true
+        }.format(cost.setScale(2, BigDecimal.ROUND_DOWN))
 }

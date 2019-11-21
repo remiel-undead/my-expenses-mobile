@@ -2,12 +2,14 @@ package ru.neofusion.undead.myexpenses.repository.network
 
 import android.content.Context
 import com.google.gson.GsonBuilder
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.neofusion.undead.myexpenses.BuildConfig
-import ru.neofusion.undead.myexpenses.repository.Mapper
-import ru.neofusion.undead.myexpenses.repository.Result
+import ru.neofusion.undead.myexpenses.domain.Category
+import ru.neofusion.undead.myexpenses.domain.Mapper
+import ru.neofusion.undead.myexpenses.domain.Result
+import ru.neofusion.undead.myexpenses.repository.network.result.Category as ApiCategory
 import ru.neofusion.undead.myexpenses.repository.network.result.Key
 import ru.neofusion.undead.myexpenses.repository.network.result.Login
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
@@ -41,5 +43,23 @@ object Api {
             .map { service.logout(it).execute() }
             .map { response ->
                 Mapper.responseToResult<Nothing, Nothing>(response)
+            }
+
+    @JvmStatic
+    fun getCategories(context: Context): Single<Result<List<Category>>> =
+        Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            .map { service.getCategories(it).execute() }
+            .map { response ->
+                Mapper.responseToResult<List<ApiCategory>, List<Category>>(response) {
+                        apiCategories ->
+                    apiCategories.map {
+                        Category(
+                            it.id,
+                            it.name,
+                            it.parentId,
+                            it.hidden
+                        )
+                    }
+                }
             }
 }

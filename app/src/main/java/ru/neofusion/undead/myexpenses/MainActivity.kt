@@ -11,9 +11,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import ru.neofusion.undead.myexpenses.repository.Result
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.UnauthorizedException
 import ru.neofusion.undead.myexpenses.repository.network.Api
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             result
                         }
-                        .observeOn(Schedulers.single())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
                             // TODO show progress
                         }

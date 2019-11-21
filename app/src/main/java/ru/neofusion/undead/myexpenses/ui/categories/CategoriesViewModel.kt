@@ -1,13 +1,11 @@
 package ru.neofusion.undead.myexpenses.ui.categories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.content.Context
+import ru.neofusion.undead.myexpenses.domain.Category
+import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 
-class CategoriesViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is categories Fragment"
-    }
-    val text: LiveData<String> = _text
+class CategoriesViewModel : ResultViewModel<List<Category>>() {
+    override fun loadData(context: Context) =
+        Api.getCategories(context)
 }

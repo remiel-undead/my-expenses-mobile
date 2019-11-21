@@ -1,7 +1,10 @@
-package ru.neofusion.undead.myexpenses.repository
+package ru.neofusion.undead.myexpenses.domain
 
 import com.google.gson.GsonBuilder
 import retrofit2.Response
+import ru.neofusion.undead.myexpenses.repository.SecurityException
+import ru.neofusion.undead.myexpenses.repository.UnauthorizedException
+import ru.neofusion.undead.myexpenses.repository.ValidationException
 import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
 
 object Mapper {
@@ -16,20 +19,46 @@ object Mapper {
         getSuccess(response)?.let {
             Result.Success(mapper?.invoke(it) ?: it as R)
         } ?: getValidationPairs(response)?.let { validationPairs ->
-            Result.Error("Ошибка валидации", ValidationException(validationPairs))
+            Result.Error(
+                "Ошибка валидации",
+                ValidationException(validationPairs)
+            )
         } ?: takeIf { response.code() == 401 }?.let {
-            Result.Error(getErrorMessage(response), UnauthorizedException())
+            Result.Error(
+                getErrorMessage(
+                    response
+                ), UnauthorizedException()
+            )
         } ?: takeIf { response.code() == 400 }?.let {
-            val errorBody = response.errorBody()?.string()?.let { parseErrorBody(it) }
+            val errorBody = response.errorBody()?.string()?.let {
+                parseErrorBody(
+                    it
+                )
+            }
                 ?: return@let null
-            val exceptionMessage = errorBody.error?.message ?: getErrorMessage(response)
+            val exceptionMessage = errorBody.error?.message ?: getErrorMessage(
+                response
+            )
             when (errorBody.error?.code) {
-                CODE_INVALID_LOGIN_PASSWORD -> Result.Error(exceptionMessage, SecurityException.InvalidLoginPassword())
-                CODE_KEY_LIMIT_IS_OUT -> Result.Error(exceptionMessage, SecurityException.KeyLimitIsOut())
-                CODE_KEY_GENERATION_ERROR -> Result.Error(exceptionMessage, SecurityException.KeyGenerationError())
+                CODE_INVALID_LOGIN_PASSWORD -> Result.Error(
+                    exceptionMessage,
+                    SecurityException.InvalidLoginPassword()
+                )
+                CODE_KEY_LIMIT_IS_OUT -> Result.Error(
+                    exceptionMessage,
+                    SecurityException.KeyLimitIsOut()
+                )
+                CODE_KEY_GENERATION_ERROR -> Result.Error(
+                    exceptionMessage,
+                    SecurityException.KeyGenerationError()
+                )
                 else -> null
             }
-        } ?: Result.Error(getErrorMessage(response))
+        } ?: Result.Error(
+            getErrorMessage(
+                response
+            )
+        )
 
     private fun <T : Any?> getSuccess(response: Response<ApiResult<T>>): T? =
         response.takeIf { response.isSuccessful }?.body()?.success

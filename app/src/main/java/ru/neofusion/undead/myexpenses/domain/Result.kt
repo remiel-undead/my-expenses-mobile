@@ -1,4 +1,4 @@
-package ru.neofusion.undead.myexpenses.repository
+package ru.neofusion.undead.myexpenses.domain
 
 sealed class Result<out T : Any?> {
     data class Success<out T : Any?>(val value: T) : Result<T>()

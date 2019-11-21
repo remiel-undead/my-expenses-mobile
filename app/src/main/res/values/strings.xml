@@ -13,4 +13,6 @@
 
     <!-- Logout -->
     <string name="menu_item_logout">Выйти</string>
+
+    <string name="empty_content_text">Здесь пусто.</string>
 </resources>

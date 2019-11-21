@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
+import ru.neofusion.undead.myexpenses.repository.network.result.Category
 import ru.neofusion.undead.myexpenses.repository.network.result.Key
 import ru.neofusion.undead.myexpenses.repository.network.result.Login
 
@@ -15,4 +16,7 @@ interface MyExpensesService {
 
     @GET("/api/v1/logout")
     fun logout(@Header("API-Key") apiKey: String): Call<ApiResult<Nothing>>
+
+    @GET("/api/v1/categories")
+    fun getCategories(@Header("API-Key") apiKey: String): Call<ApiResult<List<Category>>>
 }

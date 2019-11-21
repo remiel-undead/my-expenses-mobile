@@ -1,4 +1,4 @@
-package ru.neofusion.undead.myexpenses.repository
+package ru.neofusion.undead.myexpenses.domain
 
 sealed class SecurityException : Exception() {
     class InvalidLoginPassword : SecurityException()

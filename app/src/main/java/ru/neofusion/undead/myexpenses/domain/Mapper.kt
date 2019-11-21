@@ -2,9 +2,6 @@ package ru.neofusion.undead.myexpenses.domain
 
 import com.google.gson.GsonBuilder
 import retrofit2.Response
-import ru.neofusion.undead.myexpenses.repository.SecurityException
-import ru.neofusion.undead.myexpenses.repository.UnauthorizedException
-import ru.neofusion.undead.myexpenses.repository.ValidationException
 import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
 
 object Mapper {

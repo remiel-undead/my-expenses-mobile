@@ -4,18 +4,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_categories.*
 import ru.neofusion.undead.myexpenses.R
+import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
+import ru.neofusion.undead.myexpenses.ui.BaseViewModelFragment
+import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 
-class CategoriesFragment : Fragment() {
+class CategoriesFragment : BaseViewModelFragment<List<Category>>() {
 
-    private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var categoriesAdapter: CategoriesAdapter
+
+    override fun getViewModel(): ResultViewModel<List<Category>> =
+        ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
+
+    override fun doOnResult(result: Result<List<Category>>) {
+        if (result is Result.Success) {
+            categoriesAdapter.setCategories(result.value)
+            emptyListTextView.visibility = if (result.value.isEmpty()) View.VISIBLE else View.GONE
+        }
+    }
+
+    override fun getLayoutResource(): Int = R.layout.fragment_categories
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,17 +38,8 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesViewModel =
-            ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
         categoriesAdapter = CategoriesAdapter()
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = categoriesAdapter
-        categoriesViewModel.subscribe(requireContext())
-        categoriesViewModel.result.observe(this, Observer { result ->
-            if (result is Result.Success) {
-                categoriesAdapter.setCategories(result.value)
-                emptyListTextView.visibility = if (result.value.isEmpty()) View.VISIBLE else View.GONE
-            }
-        })
     }
 }

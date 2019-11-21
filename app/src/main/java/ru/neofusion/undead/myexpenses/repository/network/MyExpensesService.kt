@@ -1,14 +1,9 @@
 package ru.neofusion.undead.myexpenses.repository.network
 
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
-import ru.neofusion.undead.myexpenses.repository.network.result.Category
-import ru.neofusion.undead.myexpenses.repository.network.result.Key
-import ru.neofusion.undead.myexpenses.repository.network.result.Login
+import retrofit2.http.*
+import ru.neofusion.undead.myexpenses.repository.network.result.*
+import java.util.*
 
 interface MyExpensesService {
     @POST("/api/v1/login")
@@ -19,4 +14,14 @@ interface MyExpensesService {
 
     @GET("/api/v1/categories")
     fun getCategories(@Header("API-Key") apiKey: String): Call<ApiResult<List<Category>>>
+
+    @GET("/api/v1/payments")
+    fun getPayments(
+        @Header("API-Key") apiKey: String,
+        @Query("start") start: Date,
+        @Query("end") end: Date,
+        @Query("order") order: Int,
+        @Query("cat") cat: Int? = null,
+        @Query("sub") sub: Int = 1
+    ): Call<ApiResult<List<Payment>>>
 }

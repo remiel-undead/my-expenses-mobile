@@ -1,9 +1,7 @@
 package ru.neofusion.undead.myexpenses.ui.categories
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_categories.*
@@ -28,12 +26,6 @@ class CategoriesFragment : BaseViewModelFragment<List<Category>>() {
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_categories
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_categories, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

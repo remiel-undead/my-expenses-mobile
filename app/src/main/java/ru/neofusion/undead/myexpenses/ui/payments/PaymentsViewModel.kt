@@ -1,13 +1,27 @@
 package ru.neofusion.undead.myexpenses.ui.payments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.content.Context
+import ru.neofusion.undead.myexpenses.domain.Payment
+import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.result.Order
+import ru.neofusion.undead.myexpenses.ui.ResultViewModel
+import ru.neofusion.undead.myexpenses.ui.DateUtils.plus
+import java.util.*
 
-class PaymentsViewModel : ViewModel() {
+class PaymentsViewModel : ResultViewModel<List<Payment>>() {
+    private var startDate: Date = Date()
+    private var endDate: Date = Date().plus(Calendar.MONTH, -1)
+    private var order: Order = Order.BY_DATE_ASC
+    private var categoryId: Int? = null
+    private var useSubCategories: Boolean = true
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is payments Fragment"
-    }
-    val text: LiveData<String> = _text
+    override fun loadData(context: Context) =
+        Api.getPayments(
+            context,
+            startDate,
+            endDate,
+            order,
+            categoryId,
+            useSubCategories
+        )
 }

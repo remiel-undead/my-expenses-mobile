@@ -1,7 +1,6 @@
 package ru.neofusion.undead.myexpenses.repository.network.result
 
 import com.google.gson.annotations.SerializedName
-import java.math.BigDecimal
 import java.util.*
 
 class Payment(
@@ -11,5 +10,5 @@ class Payment(
     @SerializedName("date") val date: Date,
     @SerializedName("description") val description: String?,
     @SerializedName("seller") val seller: String?,
-    @SerializedName("cost") val cost: BigDecimal
+    @SerializedName("cost") val cost: Int
 )

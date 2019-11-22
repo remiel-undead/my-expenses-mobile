@@ -6,6 +6,8 @@ import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.neofusion.undead.myexpenses.BuildConfig
+import ru.neofusion.undead.myexpenses.BigDecimalUtils.toBigDecimalRoubles
+import ru.neofusion.undead.myexpenses.BigDecimalUtils.toIntRoubles
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Mapper
@@ -130,7 +132,7 @@ object Api {
                             it.date,
                             it.description,
                             it.seller,
-                            it.cost
+                            it.cost.toBigDecimalRoubles()
                         )
                     }
                 }
@@ -154,7 +156,7 @@ object Api {
                         date,
                         description,
                         seller,
-                        cost.toPlainString()
+                        cost.toIntRoubles()
                     )
                 ).execute()
             }

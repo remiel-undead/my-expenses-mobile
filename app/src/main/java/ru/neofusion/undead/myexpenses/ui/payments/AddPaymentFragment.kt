@@ -23,6 +23,7 @@ import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.ui.RoublesTextWatcher
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 import java.util.*
 
@@ -125,6 +126,8 @@ class AddPaymentFragment : Fragment() {
                 clearControls()
             }
         }
+
+        etCost.addTextChangedListener(RoublesTextWatcher(etCost))
 
         viewModel.subscribe(requireContext())
     }

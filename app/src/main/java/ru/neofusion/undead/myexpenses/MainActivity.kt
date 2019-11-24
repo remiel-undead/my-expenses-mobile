@@ -65,12 +65,6 @@ class MainActivity : AppCompatActivity() {
                             result
                         }
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe {
-                            // TODO show progress
-                        }
-                        .doOnTerminate {
-                            // TODO hide progress
-                        }
                         .subscribe({ result: Result<Nothing?> ->
                             if (result is Result.Success) {
                                 goToLoginActivityAndFinish()

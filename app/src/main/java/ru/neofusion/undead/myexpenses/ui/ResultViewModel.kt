@@ -14,12 +14,18 @@ abstract class ResultViewModel<T : Any?> : ViewModel() {
     val result = MutableLiveData<Result<T>>()
     private val compositeDisposable = CompositeDisposable()
 
-    fun subscribe(context: Context) {
+    fun subscribe(
+        context: Context,
+        doOnSubscribe: (() -> Unit)? = null,
+        doOnTerminate: (() -> Unit)? = null
+    ) {
         compositeDisposable.clear()
         compositeDisposable.add(
             loadData(context)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { doOnSubscribe?.invoke() }
+                .doOnTerminate { doOnTerminate?.invoke() }
                 .subscribe({
                     result.value = it
                 }, {

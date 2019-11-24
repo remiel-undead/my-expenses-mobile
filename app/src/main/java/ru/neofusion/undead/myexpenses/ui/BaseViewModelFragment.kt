@@ -32,6 +32,10 @@ abstract class BaseViewModelFragment<T : Any?> : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        loadViewData()
+    }
+
+    open fun loadViewData() {
         viewModel.subscribe(requireContext())
     }
 }

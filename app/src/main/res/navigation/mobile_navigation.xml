@@ -9,7 +9,7 @@
         android:id="@+id/navigation_payments"
         android:name="ru.neofusion.undead.myexpenses.ui.payments.PaymentsFragment"
         android:label="@string/title_payments"
-        tools:layout="@layout/fragment_payments" />
+        tools:layout="@layout/fragment_base_list" />
 
     <fragment
         android:id="@+id/navigation_templates"
@@ -21,5 +21,5 @@
         android:id="@+id/navigation_categories"
         android:name="ru.neofusion.undead.myexpenses.ui.categories.CategoriesFragment"
         android:label="@string/title_categories"
-        tools:layout="@layout/fragment_categories" />
+        tools:layout="@layout/fragment_base_list" />
 </navigation>

@@ -15,4 +15,14 @@
     <string name="menu_item_logout">Выйти</string>
 
     <string name="empty_content_text">Здесь пусто.</string>
+
+    <!-- Payment -->
+    <string name="hint_payment_category">Категория</string>
+    <string name="hint_payment_date">Дата</string>
+    <string name="hint_payment_description">Описание</string>
+    <string name="hint_payment_seller">Продавец</string>
+    <string name="hint_payment_cost">Стоимость</string>
+    <string name="button_text_save">Сохранить</string>
+    <string name="button_text_save_and_add_new">Сохранить и добавить следующий</string>
+    <string name="error_no_categories">Не найдено ни одной категории</string>
 </resources>

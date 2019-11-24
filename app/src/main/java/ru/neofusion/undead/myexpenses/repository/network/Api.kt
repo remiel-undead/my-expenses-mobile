@@ -165,4 +165,24 @@ object Api {
                     it.id
                 }
             }
+
+    @JvmStatic
+    fun getPayment(context: Context, id: Int): Single<Result<Payment>> =
+        Single.fromCallable { AuthHelper.getKey(context) }
+            .map { apiKey ->
+                service.getPayment(apiKey, id).execute()
+            }
+            .map { response ->
+                Mapper.responseToResult<ApiPayment, Payment>(response) {
+                    Payment(
+                        it.id,
+                        it.category,
+                        it.categoryId,
+                        it.date,
+                        it.description,
+                        it.seller,
+                        it.cost.toBigDecimalRoubles()
+                    )
+                }
+            }
 }

@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvCost"
+                    android:id="@+id/etCost"
                     style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="@dimen/payment_card_cost_width"
                     android:layout_height="wrap_content"
@@ -42,12 +42,12 @@
                     android:padding="4dp"
                     android:text="@{payment.costToString}"
                     bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintStart_toEndOf="@id/tvCategory"
+                    bind:layout_constraintStart_toEndOf="@id/etCategory"
                     bind:layout_constraintTop_toTopOf="parent"
                     tools:text="123.00" />
 
                 <TextView
-                    android:id="@+id/tvCategory"
+                    android:id="@+id/etCategory"
                     style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:lines="2"
                     android:padding="4dp"
                     android:text="@{payment.category}"
-                    bind:layout_constraintEnd_toStartOf="@id/tvCost"
+                    bind:layout_constraintEnd_toStartOf="@id/etCost"
                     bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintTop_toTopOf="parent"
                     tools:text="Категория 1 > Категория 2" />
@@ -94,7 +94,7 @@
                     bind:layout_constraintEnd_toStartOf="@id/tvDate"
                     bind:layout_constraintBottom_toBottomOf="parent"
                     bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/tvCategory"
+                    bind:layout_constraintTop_toBottomOf="@id/etCategory"
                     tools:text="Описание / Продавец" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,8 +15,8 @@ class CategoriesFragment : BaseViewModelFragment<List<Category>>() {
 
     private lateinit var categoriesAdapter: CategoriesAdapter
 
-    override fun getViewModel(): ResultViewModel<List<Category>> =
-        ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
+    override val viewModel: ResultViewModel<List<Category>>
+        get() = ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
 
     override fun doOnResult(result: Result<List<Category>>) {
         if (result is Result.Success) {

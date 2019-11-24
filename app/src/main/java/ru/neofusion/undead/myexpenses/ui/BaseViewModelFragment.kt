@@ -13,11 +13,9 @@ abstract class BaseViewModelFragment<T : Any?> : Fragment() {
     @LayoutRes
     abstract fun getLayoutResource(): Int
 
-    abstract fun getViewModel(): ResultViewModel<T>
-
     abstract fun doOnResult(result: Result<T>)
 
-    private lateinit var viewModel: ResultViewModel<T>
+    protected abstract val viewModel: ResultViewModel<T>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +25,6 @@ abstract class BaseViewModelFragment<T : Any?> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = getViewModel()
         viewModel.result.observe(this, Observer { result ->
             doOnResult(result)
         })

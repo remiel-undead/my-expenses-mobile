@@ -35,4 +35,10 @@ interface MyExpensesService {
         @Header("API-Key") apiKey: String,
         @Body payment: ru.neofusion.undead.myexpenses.repository.network.request.Payment
     ): Call<ApiResult<Id>>
+
+    @GET("/api/v1/payments/{id}")
+    fun getPayment(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int
+    ): Call<ApiResult<Payment>>
 }

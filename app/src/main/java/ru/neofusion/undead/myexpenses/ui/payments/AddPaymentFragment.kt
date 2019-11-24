@@ -27,9 +27,21 @@ import ru.neofusion.undead.myexpenses.ui.RoublesTextWatcher
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 import java.util.*
 
-class AddPaymentFragment : Fragment() {
+class AddPaymentFragment(
+    private val categoryId: Int?,
+    private val description: String?,
+    private val seller: String?,
+    private val costString: String?
+) : Fragment() {
+
     companion object {
-        fun newInstance(): AddPaymentFragment = AddPaymentFragment()
+        fun newInstance(
+            categoryId: Int?,
+            description: String?,
+            seller: String?,
+            costString: String?
+        ): AddPaymentFragment =
+            AddPaymentFragment(categoryId, description, seller, costString)
     }
 
     private lateinit var categories: List<Category>
@@ -89,6 +101,8 @@ class AddPaymentFragment : Fragment() {
                 requireActivity().finish()
             }
             adapter.notifyDataSetChanged()
+
+            initControls()
         } else {
             UiHelper.snack(requireActivity(), (result as Result.Error).message)
         }
@@ -132,9 +146,18 @@ class AddPaymentFragment : Fragment() {
         viewModel.subscribe(requireContext())
     }
 
+    private fun initControls() {
+        spinnerCategory.adapter.count.takeIf { it > 0 }.let {
+            val index = categories.indexOfFirst { it.id == categoryId }
+            spinnerCategory.setSelection(if (index != -1) index else 0)
+        }
+        etDescription.setText(description ?: "")
+        etSeller.setText(seller ?: "")
+        etCost.setText(costString ?: "")
+    }
+
     private fun clearControls() {
         spinnerCategory.adapter.count.takeIf { it > 0 }.let { spinnerCategory.setSelection(0) }
-        datePicker.setText("")
         etDescription.setText("")
         etSeller.setText("")
         etCost.setText("")

@@ -9,8 +9,8 @@ import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.databinding.ListItemPaymentBinding
 import ru.neofusion.undead.myexpenses.domain.Payment
 
-class PaymentsAdapter : RecyclerView.Adapter<PaymentsAdapter.PaymentViewHolder>() {
-
+class PaymentsAdapter(private val paymentLongClickListener: PaymentsFragment.PaymentLongClickListener) :
+    RecyclerView.Adapter<PaymentsAdapter.PaymentViewHolder>() {
     private var payments: List<Payment>? = null
 
     override fun onCreateViewHolder(@NonNull viewGroup: ViewGroup, i: Int): PaymentViewHolder {
@@ -24,6 +24,10 @@ class PaymentsAdapter : RecyclerView.Adapter<PaymentsAdapter.PaymentViewHolder>(
     override fun onBindViewHolder(@NonNull paymentViewHolder: PaymentViewHolder, i: Int) {
         val payment = payments?.get(i)
         paymentViewHolder.listItemPaymentBinding.payment = payment
+        paymentViewHolder.itemView.setOnLongClickListener {
+            paymentLongClickListener.onPaymentLongClick(payment)
+            true
+        }
     }
 
     override fun getItemCount(): Int =

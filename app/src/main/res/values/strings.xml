@@ -25,4 +25,8 @@
     <string name="button_text_save">Сохранить</string>
     <string name="button_text_save_and_add_new">Сохранить и добавить следующий</string>
     <string name="error_no_categories">Не найдено ни одной категории</string>
+
+    <string name="long_tap_option_edit">Редактировать</string>
+    <string name="long_tap_option_add_as_template">Добавить как шаблон</string>
+    <string name="long_tap_option_redo">Повторить</string>
 </resources>

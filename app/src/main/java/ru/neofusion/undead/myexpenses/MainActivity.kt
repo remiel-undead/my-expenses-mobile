@@ -16,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.domain.UnauthorizedException
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.navigation_logout -> {
                 compositeDisposable.add(
-                    Api.logout(this)
+                    MyExpenses.AuthApi.logout(this)
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.newThread())
                         .map { result ->

@@ -21,7 +21,7 @@ import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.ui.RoublesTextWatcher
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 import java.util.*
@@ -152,7 +152,7 @@ class AddPaymentFragment(
         }
 
         compositeDisposable.add(
-            Api.addPayment(
+            MyExpenses.PaymentApi.addPayment(
                 requireContext(),
                 categories[spinnerCategory.selectedItemPosition].id,
                 datePicker.text.toString().formatToDate() ?: Date(),

@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
             login.isNullOrEmpty() || password.isNullOrEmpty()
         }?.let { (login, password) ->
             compositeDisposable.add(
-                Api.login(login.toString(), password.toString())
+                MyExpenses.AuthApi.login(login.toString(), password.toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .map { result ->

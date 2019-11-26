@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import java.lang.Exception
 
 class EditPaymentViewModel : ViewModel() {
@@ -24,8 +24,8 @@ class EditPaymentViewModel : ViewModel() {
         compositeDisposable.clear()
         compositeDisposable.add(
             Single.zip(
-                Api.getPayment(context, paymentId),
-                Api.getCategories(context),
+                MyExpenses.PaymentApi.getPayment(context, paymentId),
+                MyExpenses.CategoryApi.getCategories(context),
                 BiFunction { paymentResult: Result<Payment>, categoriesResult: Result<List<Category>> ->
                     paymentResult to categoriesResult
                 })

@@ -8,7 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import java.lang.Exception
 
 class AddPaymentViewModel : ViewModel() {
@@ -19,7 +19,7 @@ class AddPaymentViewModel : ViewModel() {
     fun subscribe(context: Context) {
         compositeDisposable.clear()
         compositeDisposable.add(
-            Api.getCategories(context)
+            MyExpenses.CategoryApi.getCategories(context)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

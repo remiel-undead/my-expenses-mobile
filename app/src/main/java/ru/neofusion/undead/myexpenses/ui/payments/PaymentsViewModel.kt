@@ -2,7 +2,7 @@ package ru.neofusion.undead.myexpenses.ui.payments
 
 import android.content.Context
 import ru.neofusion.undead.myexpenses.domain.Payment
-import ru.neofusion.undead.myexpenses.repository.network.Api
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.repository.network.result.Order
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 import ru.neofusion.undead.myexpenses.DateUtils.plus
@@ -16,7 +16,7 @@ class PaymentsViewModel : ResultViewModel<List<Payment>>() {
     private var useSubCategories: Boolean = true
 
     override fun loadData(context: Context) =
-        Api.getPayments(
+        MyExpenses.PaymentApi.getPayments(
             context,
             startDate,
             endDate,

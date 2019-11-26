@@ -23,6 +23,8 @@
     <string name="hint_payment_seller">Продавец</string>
     <string name="hint_payment_cost">Стоимость</string>
     <string name="button_text_save">Сохранить</string>
+    <string name="button_text_redo">Повторить</string>
+    <string name="button_text_delete">Удалить</string>
     <string name="button_text_save_and_add_new">Сохранить и добавить следующий</string>
     <string name="error_no_categories">Не найдено ни одной категории</string>
 

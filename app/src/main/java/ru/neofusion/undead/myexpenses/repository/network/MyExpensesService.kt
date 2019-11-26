@@ -36,6 +36,13 @@ interface MyExpensesService {
         @Body payment: ru.neofusion.undead.myexpenses.repository.network.request.Payment
     ): Call<ApiResult<Id>>
 
+    @PUT("/api/v1/payments/{id}")
+    fun editPayment(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int,
+        @Body payment: ru.neofusion.undead.myexpenses.repository.network.request.Payment
+    ): Call<ApiResult<Nothing>>
+
     @GET("/api/v1/payments/{id}")
     fun getPayment(
         @Header("API-Key") apiKey: String,

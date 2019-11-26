@@ -24,17 +24,19 @@ class PaymentsAdapter(private val paymentLongClickListener: PaymentsFragment.Pay
     override fun onBindViewHolder(@NonNull paymentViewHolder: PaymentViewHolder, i: Int) {
         val payment = payments?.get(i)
         paymentViewHolder.listItemPaymentBinding.payment = payment
-        paymentViewHolder.itemView.setOnLongClickListener {
-            paymentLongClickListener.onPaymentLongClick(payment)
-            true
+        payment?.let {
+            paymentViewHolder.itemView.setOnLongClickListener {
+                paymentLongClickListener.onPaymentLongClick(payment)
+                true
+            }
         }
     }
 
     override fun getItemCount(): Int =
         payments?.size ?: 0
 
-    fun setPayments(categories: List<Payment>) {
-        this.payments = categories
+    fun setPayments(payments: List<Payment>) {
+        this.payments = payments
         notifyDataSetChanged()
     }
 

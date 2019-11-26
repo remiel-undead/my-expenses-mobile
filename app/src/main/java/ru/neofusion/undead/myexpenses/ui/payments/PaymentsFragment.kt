@@ -16,31 +16,33 @@ import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 
 class PaymentsFragment : BaseListViewModelFragment<Payment>() {
     interface PaymentLongClickListener {
-        fun onPaymentLongClick(payment: Payment?)
+        fun onPaymentLongClick(payment: Payment)
     }
 
     private lateinit var paymentsAdapter: PaymentsAdapter
     private lateinit var longClickOptions: Array<String>
 
     private val paymentLongClickListener = object : PaymentLongClickListener {
-        override fun onPaymentLongClick(payment: Payment?) {
+        override fun onPaymentLongClick(payment: Payment) {
             val dialog = AlertDialog.Builder(requireContext())
                 .setItems(longClickOptions) { _, which ->
                     when (which) {
-                        0 -> {
-
+                        0 -> { // edit
+                            val intent = Intent(activity, PaymentActivity::class.java)
+                            PaymentActivity.putPaymentId(intent, payment?.id)
+                            startActivity(intent)
                         }
                         1 -> {
 
                         }
                         2 -> { // redo
                             val intent = Intent(activity, PaymentActivity::class.java)
-                            PaymentActivity.putCategoryId(intent, payment?.categoryId)
-                            PaymentActivity.putDescription(intent, payment?.description)
-                            PaymentActivity.putSeller(intent, payment?.seller)
+                            PaymentActivity.putCategoryId(intent, payment.categoryId)
+                            PaymentActivity.putDescription(intent, payment.description)
+                            PaymentActivity.putSeller(intent, payment.seller)
                             PaymentActivity.putCostString(
                                 intent,
-                                payment?.cost?.toPlainString()
+                                payment.cost.toPlainString()
                             )
                             startActivity(intent)
                         }

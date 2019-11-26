@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.neofusion.undead.myexpenses.ui.payments.AddPaymentFragment
+import ru.neofusion.undead.myexpenses.ui.payments.EditPaymentFragment
 
 class PaymentActivity : AppCompatActivity() {
     companion object {
@@ -49,15 +50,19 @@ class PaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
         val bundle = intent.extras
+        val paymentId = getPaymentId(bundle)
         supportFragmentManager.beginTransaction().apply {
             replace(
                 R.id.paymentFragment,
-                AddPaymentFragment.newInstance(
-                    getPaymentCategoryId(bundle),
-                    getDescription(bundle),
-                    getSeller(bundle),
-                    getCostString(bundle)
-                )
+                if (paymentId != null)
+                    EditPaymentFragment.newInstance(paymentId)
+                else
+                    AddPaymentFragment.newInstance(
+                        getPaymentCategoryId(bundle),
+                        getDescription(bundle),
+                        getSeller(bundle),
+                        getCostString(bundle)
+                    )
             )
             commit()
         }

@@ -13,52 +13,51 @@ import androidx.lifecycle.ViewModelProviders
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_add_payment.*
+import kotlinx.android.synthetic.main.fragment_edit_payment.*
 import ru.neofusion.undead.myexpenses.BigDecimalUtils.toBigDecimalRoubles
+import ru.neofusion.undead.myexpenses.BigDecimalUtils.toStringRoubles
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Category
+import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.Api
 import ru.neofusion.undead.myexpenses.ui.RoublesTextWatcher
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 import java.util.*
 
-class AddPaymentFragment(
-    private val categoryId: Int?,
-    private val description: String?,
-    private val seller: String?,
-    private val costString: String?
+class EditPaymentFragment(
+    private val paymentId: Int
 ) : Fragment() {
 
     companion object {
         fun newInstance(
-            categoryId: Int?,
-            description: String?,
-            seller: String?,
-            costString: String?
-        ): AddPaymentFragment =
-            AddPaymentFragment(categoryId, description, seller, costString)
+            paymentId: Int
+        ): EditPaymentFragment =
+            EditPaymentFragment(paymentId)
     }
 
     private lateinit var categories: List<Category>
 
     private val compositeDisposable = CompositeDisposable()
 
-    private lateinit var viewModel: AddPaymentViewModel
+    private lateinit var viewModel: EditPaymentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_add_payment, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_payment, container, false)
         retainInstance = true
-        viewModel = ViewModelProviders.of(this).get(AddPaymentViewModel::class.java)
-        viewModel.result.observe(this, androidx.lifecycle.Observer {
+        viewModel = ViewModelProviders.of(this).get(EditPaymentViewModel::class.java)
+        viewModel.resultCategories.observe(this, androidx.lifecycle.Observer {
             doOnCategoriesResult(it)
+        })
+        viewModel.resultPayment.observe(this, androidx.lifecycle.Observer {
+            doOnPaymentResult(it)
         })
         return view
     }
@@ -66,6 +65,15 @@ class AddPaymentFragment(
     override fun onDetach() {
         super.onDetach()
         compositeDisposable.dispose()
+    }
+
+    private fun doOnPaymentResult(result: Result<Payment>) {
+        if (result is Result.Success) {
+            val payment = result.value
+            initControls(payment)
+        } else {
+            UiHelper.snack(requireActivity(), (result as Result.Error).message)
+        }
     }
 
     private fun doOnCategoriesResult(result: Result<List<Category>>) {
@@ -84,8 +92,6 @@ class AddPaymentFragment(
                 requireActivity().finish()
             }
             adapter.notifyDataSetChanged()
-
-            initControls()
         } else {
             UiHelper.snack(requireActivity(), (result as Result.Error).message)
         }
@@ -111,49 +117,44 @@ class AddPaymentFragment(
             ).show()
         }
 
-        addButton.setOnClickListener {
-            addPayment { paymentId ->
-                UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
+        saveButton.setOnClickListener {
+            savePayment { paymentId ->
+                UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
                 finishWithSuccess(paymentId)
             }
         }
-        addAndCreateNewButton.setOnClickListener {
-            addPayment { paymentId ->
-                UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
-                clearControls()
-            }
+        redoButton.setOnClickListener {
+            // TODO redo from edit
+        }
+        deleteButton.setOnClickListener {
+            // TODO delete
         }
 
         etCost.addTextChangedListener(RoublesTextWatcher(etCost))
 
-        viewModel.subscribe(requireContext())
+        viewModel.subscribe(requireContext(), paymentId)
     }
 
-    private fun initControls() {
+    private fun initControls(payment: Payment) {
         spinnerCategory.adapter.count.takeIf { it > 0 }.let {
-            val index = categories.indexOfFirst { it.id == categoryId }
+            val index = categories.indexOfFirst { it.id == payment.categoryId }
             spinnerCategory.setSelection(if (index != -1) index else 0)
         }
-        etDescription.setText(description ?: "")
-        etSeller.setText(seller ?: "")
-        etCost.setText(costString ?: "")
+        datePicker.setText(payment.date.formatToString())
+        etDescription.setText(payment.description ?: "")
+        etSeller.setText(payment.seller ?: "")
+        etCost.setText(payment.cost.toStringRoubles())
     }
 
-    private fun clearControls() {
-        spinnerCategory.adapter.count.takeIf { it > 0 }.let { spinnerCategory.setSelection(0) }
-        etDescription.setText("")
-        etSeller.setText("")
-        etCost.setText("")
-    }
-
-    private fun addPayment(doOnSuccess: (Int) -> Unit) {
+    private fun savePayment(doOnSuccess: (Int) -> Unit) {
         if (!areFieldsValid()) {
             return
         }
 
         compositeDisposable.add(
-            Api.addPayment(
+            Api.editPayment(
                 requireContext(),
+                paymentId,
                 categories[spinnerCategory.selectedItemPosition].id,
                 datePicker.text.toString().formatToDate() ?: Date(),
                 etDescription.text.toString(),
@@ -162,21 +163,23 @@ class AddPaymentFragment(
             )
                 .doOnSubscribe {
                     requireActivity().runOnUiThread {
-                        addButton.isEnabled = false
-                        addAndCreateNewButton.isEnabled = false
+                        saveButton.isEnabled = false
+                        redoButton.isEnabled = false
+                        deleteButton.isEnabled = false
                     }
                 }
                 .doOnTerminate {
                     requireActivity().runOnUiThread {
-                        addButton.isEnabled = true
-                        addAndCreateNewButton.isEnabled = true
+                        saveButton.isEnabled = true
+                        redoButton.isEnabled = true
+                        deleteButton.isEnabled = true
                     }
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     if (result is Result.Success) {
-                        doOnSuccess.invoke(result.value)
+                        doOnSuccess.invoke(paymentId)
                     } else {
                         UiHelper.snack(requireActivity(), (result as Result.Error).message)
                     }

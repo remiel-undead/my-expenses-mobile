@@ -10,7 +10,7 @@ import java.util.*
 import android.text.SpannableStringBuilder
 
 class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
-    inner class MoneyValueFilter(private val digits: Int) : DigitsKeyListener(false, true) {
+    inner class MoneyValueFilter(private val digits: Int) : DigitsKeyListener(Locale.getDefault(), false, true) {
         override fun filter(
             inSource: CharSequence,
             inStart: Int,
@@ -41,9 +41,9 @@ class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
 
             val dlen = dest.length
 
-            // Find the position of the decimal .
+            // Find the position of the decimal . or ,
             for (i in 0 until dstart) {
-                if (dest[i] == '.') {
+                if (dest[i] == '.' || dest[i] == ',') {
                     // being here means, that a number has
                     // been inserted after the dot
                     // check if the amount of digits is right
@@ -58,7 +58,7 @@ class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
             }
 
             for (i in start until end) {
-                if (source[i] == '.') {
+                if (source[i] == '.' || source[i] == ',') {
                     // being here means, dot has been inserted
                     // check if the amount of digits is right
                     return if (dlen - dend + (end - (i + 1)) > digits)
@@ -86,10 +86,10 @@ class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
             val value = etAmount.text.toString()
 
             if (value.isNotEmpty()) {
-                if (value.startsWith(".")) {
-                    etAmount.setText("0.")
+                if (value.startsWith(".") || value.startsWith(",")) {
+                    etAmount.setText("0,")
                 }
-                if (value.startsWith("0") && !value.startsWith("0.")) {
+                if (value.startsWith("0") && !value.startsWith("0.") && !value.startsWith("0,")) {
                     etAmount.setText("")
                 }
                 val str = etAmount.text.toString().replace(" ", "")
@@ -107,7 +107,7 @@ class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
 
     private fun getDecimalFormattedString(value: String): String {
         if (value.isNotEmpty()) {
-            val lst = StringTokenizer(value, ".")
+            val lst = StringTokenizer(value, ",")
             var str1 = value
             var str2 = ""
             if (lst.countTokens() > 1) {
@@ -117,15 +117,15 @@ class RoublesTextWatcher(private val etAmount: EditText) : TextWatcher {
             var str3 = ""
             var i = 0
             var j = -1 + str1.length
-            if (str1.get(-1 + str1.length) == '.') {
+            if (str1[-1 + str1.length] == '.' || str1[-1 + str1.length] == ',') {
                 j--
-                str3 = "."
+                str3 = ","
             }
             var k = j
             while (true) {
                 if (k < 0) {
                     if (str2.isNotEmpty())
-                        str3 = "$str3.$str2"
+                        str3 = "$str3,$str2"
                     return str3
                 }
                 if (i == 3) {

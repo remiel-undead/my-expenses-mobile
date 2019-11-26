@@ -141,7 +141,7 @@ object Api {
     @JvmStatic
     fun addPayment(
         context: Context,
-        category: Int,
+        categoryId: Int,
         date: Date,
         description: String,
         seller: String,
@@ -152,7 +152,7 @@ object Api {
                 service.addPayment(
                     apiKey,
                     RequestPayment(
-                        category,
+                        categoryId,
                         date,
                         description,
                         seller,
@@ -164,6 +164,34 @@ object Api {
                 Mapper.responseToResult<Id, Int>(response) {
                     it.id
                 }
+            }
+
+    @JvmStatic
+    fun editPayment(
+        context: Context,
+        id: Int,
+        categoryId: Int,
+        date: Date,
+        description: String,
+        seller: String,
+        cost: BigDecimal
+    ): Single<Result<Int>> =
+        Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            .map { apiKey ->
+                service.editPayment(
+                    apiKey,
+                    id,
+                    RequestPayment(
+                        categoryId,
+                        date,
+                        description,
+                        seller,
+                        cost.toIntRoubles()
+                    )
+                ).execute()
+            }
+            .map { response ->
+                Mapper.responseToResult<Nothing, Nothing>(response)
             }
 
     @JvmStatic

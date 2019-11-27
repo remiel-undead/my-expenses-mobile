@@ -31,4 +31,10 @@
     <string name="long_tap_option_edit">Редактировать</string>
     <string name="long_tap_option_add_as_template">Добавить как шаблон</string>
     <string name="long_tap_option_redo">Повторить</string>
+
+    <!-- Category -->
+    <string name="hint_category_name">Название</string>
+    <string name="hint_category_parent_category">Родительская категория</string>
+    <string name="hint_category_parent_hidden">Скрытый</string>
+    <string name="no_parent_category">\u003CНет\u003E</string>
 </resources>

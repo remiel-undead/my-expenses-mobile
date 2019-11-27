@@ -1,10 +1,12 @@
 package ru.neofusion.undead.myexpenses.ui.categories
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_base_list.*
+import ru.neofusion.undead.myexpenses.CategoryActivity
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
@@ -30,5 +32,9 @@ class CategoriesFragment : BaseListViewModelFragment<Category>() {
         categoriesAdapter = CategoriesAdapter()
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = categoriesAdapter
+
+        addButton.setOnClickListener {
+            startActivity(Intent(activity, CategoryActivity::class.java))
+        }
     }
 }

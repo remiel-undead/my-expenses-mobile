@@ -14,8 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_edit_payment.*
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toBigDecimalRoubles
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toStringRoubles
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
 import ru.neofusion.undead.myexpenses.PaymentActivity
@@ -143,7 +141,7 @@ class EditPaymentFragment(
         datePicker.setText(payment.date.formatToString())
         etDescription.setText(payment.description ?: "")
         etSeller.setText(payment.seller ?: "")
-        etCost.setText(payment.cost.toStringRoubles())
+        etCost.setText(payment.cost)
     }
 
     private fun savePayment(doOnSuccess: (Int) -> Unit) {
@@ -159,7 +157,7 @@ class EditPaymentFragment(
                 datePicker.text.toString().formatToDate() ?: Date(),
                 etDescription.text.toString(),
                 etSeller.text.toString(),
-                etCost.text.toString().toBigDecimalRoubles()
+                etCost.text.toString()
             )
                 .doOnSubscribe {
                     requireActivity().runOnUiThread {

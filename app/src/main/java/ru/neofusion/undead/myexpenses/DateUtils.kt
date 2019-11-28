@@ -12,9 +12,9 @@ object DateUtils {
         return cal.time
     }
 
-    fun Date.formatToString() =
+    fun Date.formatToString(): String =
         SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(this)
 
-    fun String.formatToDate() =
+    fun String.formatToDate(): Date? =
         SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).parse(this)
 }

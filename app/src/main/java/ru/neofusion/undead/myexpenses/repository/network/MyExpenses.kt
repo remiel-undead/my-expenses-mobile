@@ -6,8 +6,6 @@ import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.neofusion.undead.myexpenses.BuildConfig
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toBigDecimalRoubles
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toIntRoubles
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Mapper
@@ -22,7 +20,6 @@ import ru.neofusion.undead.myexpenses.repository.network.result.Payment as ApiPa
 import ru.neofusion.undead.myexpenses.repository.network.request.Category as RequestCategory
 import ru.neofusion.undead.myexpenses.repository.network.request.Payment as RequestPayment
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
-import java.math.BigDecimal
 import java.util.*
 
 object MyExpenses {
@@ -184,7 +181,7 @@ object MyExpenses {
                                 it.date,
                                 it.description,
                                 it.seller,
-                                it.cost.toBigDecimalRoubles()
+                                it.cost
                             )
                         }
                     }
@@ -197,7 +194,7 @@ object MyExpenses {
             date: Date,
             description: String,
             seller: String,
-            cost: BigDecimal
+            cost: String
         ): Single<Result<Int>> =
             Single.fromCallable { AuthHelper.getKey(context) ?: "" }
                 .map { apiKey ->
@@ -208,7 +205,7 @@ object MyExpenses {
                             date,
                             description,
                             seller,
-                            cost.toIntRoubles()
+                            cost
                         )
                     ).execute()
                 }
@@ -226,7 +223,7 @@ object MyExpenses {
             date: Date,
             description: String,
             seller: String,
-            cost: BigDecimal
+            cost: String
         ): Single<Result<Int>> =
             Single.fromCallable { AuthHelper.getKey(context) ?: "" }
                 .map { apiKey ->
@@ -238,7 +235,7 @@ object MyExpenses {
                             date,
                             description,
                             seller,
-                            cost.toIntRoubles()
+                            cost
                         )
                     ).execute()
                 }
@@ -261,7 +258,7 @@ object MyExpenses {
                             it.date,
                             it.description,
                             it.seller,
-                            it.cost.toBigDecimalRoubles()
+                            it.cost
                         )
                     }
                 }

@@ -1,9 +1,7 @@
 package ru.neofusion.undead.myexpenses.domain
 
-import java.math.BigDecimal
 import java.util.*
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toStringRoubles
 
 class Payment(
     val id: Int,
@@ -12,10 +10,7 @@ class Payment(
     val date: Date,
     val description: String?,
     val seller: String?,
-    val cost: BigDecimal
+    val cost: String
 ) {
     fun getDateFormatted(): String = date.formatToString()
-
-    fun getCostToString(): String = cost.toStringRoubles()
-
 }

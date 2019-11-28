@@ -42,7 +42,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                             PaymentActivity.putSeller(intent, payment.seller)
                             PaymentActivity.putCostString(
                                 intent,
-                                payment.cost.toPlainString()
+                                payment.cost
                             )
                             startActivity(intent)
                         }

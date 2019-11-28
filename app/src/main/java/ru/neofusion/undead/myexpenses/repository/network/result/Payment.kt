@@ -10,5 +10,5 @@ class Payment(
     @SerializedName("date") val date: Date,
     @SerializedName("description") val description: String?,
     @SerializedName("seller") val seller: String?,
-    @SerializedName("cost") val cost: Int
+    @SerializedName("cost") val cost: String
 )

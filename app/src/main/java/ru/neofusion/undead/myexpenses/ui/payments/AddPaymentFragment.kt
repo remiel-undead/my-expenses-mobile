@@ -14,7 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_add_payment.*
-import ru.neofusion.undead.myexpenses.BigDecimalUtils.toBigDecimalRoubles
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
 import ru.neofusion.undead.myexpenses.PaymentActivity
@@ -158,7 +157,7 @@ class AddPaymentFragment(
                 datePicker.text.toString().formatToDate() ?: Date(),
                 etDescription.text.toString(),
                 etSeller.text.toString(),
-                etCost.text.toString().toBigDecimalRoubles()
+                etCost.text.toString()
             )
                 .doOnSubscribe {
                     requireActivity().runOnUiThread {

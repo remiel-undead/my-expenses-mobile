@@ -20,6 +20,19 @@ interface MyExpensesService {
         @Body category: ru.neofusion.undead.myexpenses.repository.network.request.Category
     ): Call<ApiResult<Id>>
 
+    @PUT("/api/v1/categories/{id}")
+    fun editCategory(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int,
+        @Body category: ru.neofusion.undead.myexpenses.repository.network.request.Category
+    ): Call<ApiResult<Nothing>>
+
+    @GET("/api/v1/categories/{id}")
+    fun getCategory(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int
+    ): Call<ApiResult<Category>>
+
     @GET("/api/v1/payments")
     fun getPayments(
         @Header("API-Key") apiKey: String,

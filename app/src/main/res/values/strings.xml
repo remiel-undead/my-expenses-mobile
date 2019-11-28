@@ -31,6 +31,8 @@
     <string name="long_tap_option_edit">Редактировать</string>
     <string name="long_tap_option_add_as_template">Добавить как шаблон</string>
     <string name="long_tap_option_redo">Повторить</string>
+    <string name="long_tap_option_add_payment_to_category">Добавить расходы</string>
+    <string name="long_tap_option_find_payments_by_category">Найти расходы</string>
 
     <!-- Category -->
     <string name="hint_category_name">Название</string>

@@ -104,6 +104,53 @@ object MyExpenses {
                         it.id
                     }
                 }
+
+        @JvmStatic
+        fun editCategory(
+            context: Context,
+            id: Int,
+            name: String,
+            parentId: Int?,
+            isHidden: Boolean
+        ): Single<Result<Int>> =
+            Single.fromCallable { AuthHelper.getKey(context) }
+                .map { apiKey ->
+                    service.editCategory(
+                        apiKey,
+                        id,
+                        RequestCategory(
+                            name,
+                            parentId,
+                            isHidden
+                        )
+                    ).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<Nothing, Nothing>(response)
+                }
+
+        @JvmStatic
+        fun getCategory(
+            context: Context,
+            categoryId: Int
+        ): Single<Result<Category>> =
+            Single.fromCallable { AuthHelper.getKey(context) }
+                .map { apiKey ->
+                    service.getCategory(
+                        apiKey,
+                        categoryId
+                    ).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<ApiCategory, Category>(response) {
+                        Category(
+                            it.id,
+                            it.name,
+                            it.parentId,
+                            it.hidden
+                        )
+                    }
+                }
     }
 
     object PaymentApi {

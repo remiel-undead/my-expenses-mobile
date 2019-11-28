@@ -29,7 +29,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                     when (which) {
                         0 -> { // edit
                             val intent = Intent(activity, PaymentActivity::class.java)
-                            PaymentActivity.putPaymentId(intent, payment?.id)
+                            PaymentActivity.putPaymentId(intent, payment.id)
                             startActivity(intent)
                         }
                         1 -> {

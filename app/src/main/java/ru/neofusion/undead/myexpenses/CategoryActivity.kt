@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.neofusion.undead.myexpenses.ui.categories.AddCategoryFragment
-//import ru.neofusion.undead.myexpenses.ui.categories.EditCategoryFragment
+import ru.neofusion.undead.myexpenses.ui.categories.EditCategoryFragment
 
 class CategoryActivity : AppCompatActivity() {
     companion object {
@@ -26,9 +26,9 @@ class CategoryActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().apply {
             replace(
                 R.id.categoryFragment,
-//                if (categoryId != null)
-//                    EditCategoryFragment.newInstance(categoryId)
-//                else
+                if (categoryId != null)
+                    EditCategoryFragment.newInstance(categoryId)
+                else
                     AddCategoryFragment.newInstance()
             )
             commit()

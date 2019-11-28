@@ -9,7 +9,8 @@ import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.databinding.ListItemCategoryBinding
 import ru.neofusion.undead.myexpenses.domain.Category
 
-class CategoriesAdapter : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
+class CategoriesAdapter(private val categoryLongClickListener: CategoriesFragment.CategoryLongClickListener) :
+    RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
     private var categories: List<Category>? = null
 
@@ -24,6 +25,12 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHol
     override fun onBindViewHolder(@NonNull categoryViewHolder: CategoryViewHolder, i: Int) {
         val category = categories?.get(i)
         categoryViewHolder.categoryListItemBinding.category = category
+        category?.let {
+            categoryViewHolder.itemView.setOnLongClickListener {
+                categoryLongClickListener.onCategorytLongClick(category)
+                true
+            }
+        }
     }
 
     override fun getItemCount(): Int =

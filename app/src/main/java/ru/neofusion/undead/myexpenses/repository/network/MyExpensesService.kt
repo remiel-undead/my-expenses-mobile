@@ -1,5 +1,6 @@
 package ru.neofusion.undead.myexpenses.repository.network
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 import ru.neofusion.undead.myexpenses.repository.network.result.*
@@ -61,4 +62,10 @@ interface MyExpensesService {
         @Header("API-Key") apiKey: String,
         @Path("id") id: Int
     ): Call<ApiResult<Payment>>
+
+    @DELETE("/api/v1/payments/{id}")
+    fun deletePayment(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int
+    ): Call<ApiResult<Nothing>>
 }

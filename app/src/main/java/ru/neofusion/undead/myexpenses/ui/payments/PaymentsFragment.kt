@@ -6,18 +6,25 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
+import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class PaymentsFragment : BaseListViewModelFragment<Payment>() {
     interface PaymentLongClickListener {
         fun onPaymentLongClick(payment: Payment)
     }
+
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var paymentsAdapter: PaymentsAdapter
     private lateinit var longClickOptions: Array<String>
@@ -45,6 +52,9 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                                 payment.cost
                             )
                             startActivity(intent)
+                        }
+                        3 -> { // delete
+                            showDeletePaymentDialog(payment.id)
                         }
                     }
                 }.create()
@@ -75,7 +85,39 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
         longClickOptions = arrayOf(
             getString(R.string.long_tap_option_edit),
             getString(R.string.long_tap_option_add_as_template),
-            getString(R.string.long_tap_option_redo)
+            getString(R.string.long_tap_option_redo),
+            getString(R.string.long_tap_option_delete)
         )
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        compositeDisposable.dispose()
+    }
+
+    private fun showDeletePaymentDialog(paymentId: Int) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage(R.string.delete_payment_dialog_message)
+            .setPositiveButton(R.string.button_text_delete) { dialog, _ ->
+                compositeDisposable.add(
+                    MyExpenses.PaymentApi.deletePayment(requireContext(), paymentId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ result ->
+                            if (result is Result.Success) {
+                                UiHelper.snack(requireActivity(), "Платеж $paymentId удален")
+                            } else {
+                                UiHelper.snack(requireActivity(), (result as Result.Error).message)
+                            }
+                        }, {
+                            UiHelper.snack(requireActivity(), it.message ?: "Ой-ой-ой")
+                        })
+                )
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.delete_payment_dialog_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }.create()
+        dialog.show()
     }
 }

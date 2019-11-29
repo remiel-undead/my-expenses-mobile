@@ -13,9 +13,11 @@ object Mapper {
         response: Response<ApiResult<T>>,
         mapper: ((T) -> R)? = null
     ): Result<R> =
-        getSuccess(response)?.let {
-            Result.Success(mapper?.invoke(it) ?: it as R)
-        } ?: takeIf { response.code() == 401 }?.let {
+        takeIf { response.isSuccessful }?.let {
+            getSuccess(response)?.let {
+                Result.Success(mapper?.invoke(it) ?: it as R)
+            } ?: Result.Success(null as R)
+        }?: takeIf { response.code() == 401 }?.let {
             Result.Error(
                 getErrorMessage(
                     response

@@ -262,5 +262,15 @@ object MyExpenses {
                         )
                     }
                 }
+
+        @JvmStatic
+        fun deletePayment(context: Context, id: Int): Single<Result<Nothing>> =
+            Single.fromCallable { AuthHelper.getKey(context) }
+                .map { apiKey ->
+                    service.deletePayment(apiKey, id).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<Nothing, Nothing>(response)
+                }
     }
 }

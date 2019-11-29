@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_add_payment.*
 import kotlinx.android.synthetic.main.layout_edit_payment_controls.*
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
+import ru.neofusion.undead.myexpenses.DateUtils.plus
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Category
@@ -109,6 +110,17 @@ class AddPaymentFragment(
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).show()
+        }
+
+        dateLeft.setOnClickListener {
+            datePicker.text.toString().formatToDate()?.let { date ->
+                datePicker.setText(date.plus(Calendar.DAY_OF_MONTH, -1).formatToString())
+            }
+        }
+        dateRight.setOnClickListener {
+            datePicker.text.toString().formatToDate()?.let { date ->
+                datePicker.setText(date.plus(Calendar.DAY_OF_MONTH, 1).formatToString())
+            }
         }
 
         addButton.setOnClickListener {

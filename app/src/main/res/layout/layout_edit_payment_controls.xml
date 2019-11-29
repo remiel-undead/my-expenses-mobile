@@ -9,10 +9,10 @@
 
     <Spinner
         android:id="@+id/spinnerCategory"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/horizontal_margin"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@id/datePicker"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,19 +20,49 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@android:layout/simple_list_item_1" />
 
+    <ImageButton
+        android:id="@+id/dateLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:src="@drawable/ic_arrow_left_white_24dp"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@id/etDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
+
     <EditText
         android:id="@+id/datePicker"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/horizontal_margin_small"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginEnd="@dimen/horizontal_margin_small"
+        android:layout_marginBottom="@dimen/vertical_margin"
         android:autofillHints="@string/hint_payment_date"
         android:clickable="true"
-        android:focusable="false"
         android:editable="false"
+        android:focusable="false"
         android:hint="@string/hint_payment_date"
         app:layout_constraintBottom_toTopOf="@id/etDescription"
+        app:layout_constraintEnd_toStartOf="@id/dateRight"
+        app:layout_constraintStart_toEndOf="@id/dateLeft"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
+
+    <ImageButton
+        android:id="@+id/dateRight"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:src="@drawable/ic_arrow_right_white_24dp"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@id/etDescription"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/datePicker"
         app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
 
     <EditText
@@ -62,9 +92,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/horizontal_margin"
+        android:digits="0123456789.,"
         android:hint="@string/hint_payment_cost"
         android:inputType="numberDecimal"
-        android:digits="0123456789.,"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

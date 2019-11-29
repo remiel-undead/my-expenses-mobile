@@ -3,8 +3,7 @@ package ru.neofusion.undead.myexpenses.repository.network.result
 import com.google.gson.annotations.SerializedName
 
 class ApiResult<out T : Any?>(
-    @SerializedName("success") val success: T,
-    @SerializedName("validation") val validation: List<ValidationItem>?
+    @SerializedName("success") val success: T
 ) {
     class ValidationItem(
         @SerializedName("field") val field: String,
@@ -12,7 +11,8 @@ class ApiResult<out T : Any?>(
     )
 
     class ErrorBody(
-        @SerializedName("error") val error: Error?
+        @SerializedName("error") val error: Error?,
+        @SerializedName("validation") val validation: List<ValidationItem>?
     )
 
     class Error(

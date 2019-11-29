@@ -15,24 +15,29 @@ object Mapper {
     ): Result<R> =
         getSuccess(response)?.let {
             Result.Success(mapper?.invoke(it) ?: it as R)
-        } ?: getValidationPairs(response)?.let { validationPairs ->
-            Result.Error(
-                "Ошибка валидации",
-                ValidationException(validationPairs)
-            )
         } ?: takeIf { response.code() == 401 }?.let {
             Result.Error(
                 getErrorMessage(
                     response
                 ), UnauthorizedException()
             )
-        } ?: takeIf { response.code() == 400 }?.let {
+        } ?: run {
             val errorBody = response.errorBody()?.string()?.let {
                 parseErrorBody(
                     it
                 )
             }
-                ?: return@let null
+            errorBody ?: return@run null
+
+            val validationResult =
+                 getValidationPairs(errorBody.validation)?.let { validationPairs ->
+                    Result.Error(
+                        "Ошибка валидации",
+                        ValidationException(validationPairs)
+                    )
+                }
+            if (validationResult != null) return@run validationResult
+
             val exceptionMessage = errorBody.error?.message ?: getErrorMessage(
                 response
             )
@@ -51,20 +56,14 @@ object Mapper {
                 )
                 else -> null
             }
-        } ?: Result.Error(
-            getErrorMessage(
-                response
-            )
-        )
+        } ?: Result.Error(getErrorMessage(response))
 
     private fun <T : Any?> getSuccess(response: Response<ApiResult<T>>): T? =
         response.takeIf { response.isSuccessful }?.body()?.success
 
-    private fun <T : Any?> getValidationPairs(response: Response<ApiResult<T>>)
+    private fun getValidationPairs(validation: List<ApiResult.ValidationItem>?)
             : List<Pair<String, String>>? =
-        response.takeIf { it.isSuccessful }?.body()?.validation?.let { validation ->
-            validation.map { it.field to it.message }
-        }
+        validation?.map { it.field to it.message }
 
     private fun <T : Any?> getErrorMessage(response: Response<ApiResult<T>>) =
         response.message() ?: "Ой-ой-ой"

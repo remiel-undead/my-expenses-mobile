@@ -54,7 +54,7 @@ class AddCategoryFragment : Fragment() {
 
     private fun doOnCategoriesResult(result: Result<List<Category>>) {
         if (result is Result.Success) {
-            categories = result.value
+            categories = result.value.filterNot { it.hidden }
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
@@ -107,7 +107,7 @@ class AddCategoryFragment : Fragment() {
                 requireContext(),
                 etName.text.toString(),
                 spinnerParentCategory.selectedItemPosition.takeIf { it != 0 }
-                    ?.let { categories[spinnerParentCategory.selectedItemPosition].id },
+                    ?.let { categories[spinnerParentCategory.selectedItemPosition - 1].id },
                 checkboxHidden.isChecked
             )
                 .doOnSubscribe {

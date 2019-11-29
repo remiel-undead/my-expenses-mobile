@@ -10,6 +10,7 @@
             name="category"
             type="ru.neofusion.undead.myexpenses.domain.Category" />
 
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -30,16 +31,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/hiddenImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/horizontal_margin"
+                    android:src="@drawable/ic_hidden_white_24dp"
+                    android:tint="@android:color/secondary_text_dark"
+                    android:visibility="@{category.hidden ? View.VISIBLE : View.INVISIBLE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toEndOf="@id/tvFullName"
+                    bind:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/tvFullName"
+                    style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:maxLines="2"
                     android:padding="4dp"
                     android:text="@{category.name}"
-                    style="@style/TextAppearance.AppCompat.Medium"
                     bind:layout_constraintBottom_toBottomOf="parent"
-                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@id/hiddenImageView"
                     bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintTop_toTopOf="parent"
                     tools:text="Категория 1 > Категория 2" />

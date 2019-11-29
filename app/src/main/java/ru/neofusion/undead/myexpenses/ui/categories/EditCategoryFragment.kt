@@ -106,7 +106,7 @@ class EditCategoryFragment(
     private fun initControls(category: Category) {
         spinnerParentCategory.adapter.count.takeIf { it > 0 }.let {
             val index = categories.indexOfFirst { it.id == category.parentId }
-            spinnerParentCategory.setSelection(if (index != -1) index else 0)
+            spinnerParentCategory.setSelection(if (index != -1) index + 1 else 0)
         }
         etName.setText(category.name)
         checkboxHidden.isChecked = category.hidden
@@ -123,7 +123,7 @@ class EditCategoryFragment(
                 categoryId,
                 etName.text.toString(),
                 spinnerParentCategory.selectedItemPosition.takeIf { it != 0 }
-                    ?.let { categories[spinnerParentCategory.selectedItemPosition].id },
+                    ?.let { categories[spinnerParentCategory.selectedItemPosition - 1].id },
                 checkboxHidden.isChecked
             )
                 .doOnSubscribe {

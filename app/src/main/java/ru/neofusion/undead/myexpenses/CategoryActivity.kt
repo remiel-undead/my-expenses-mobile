@@ -11,7 +11,7 @@ class CategoryActivity : AppCompatActivity() {
 
         private const val KEY_CATEGORY_ID = "categoryId"
 
-        fun getCategoryId(bundle: Bundle?) = bundle?.getInt(KEY_CATEGORY_ID)
+        fun getCategoryId(bundle: Bundle?) = bundle?.getInt(KEY_CATEGORY_ID, -1) ?: -1
 
         fun putCategoryId(intent: Intent, categoryId: Int?) {
             categoryId?.let { intent.putExtra(KEY_CATEGORY_ID, it) }
@@ -26,7 +26,7 @@ class CategoryActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().apply {
             replace(
                 R.id.categoryFragment,
-                if (categoryId != null)
+                if (categoryId != -1)
                     EditCategoryFragment.newInstance(categoryId)
                 else
                     AddCategoryFragment.newInstance()

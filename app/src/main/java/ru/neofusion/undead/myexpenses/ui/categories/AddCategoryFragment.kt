@@ -54,7 +54,7 @@ class AddCategoryFragment : Fragment() {
 
     private fun doOnCategoriesResult(result: Result<List<Category>>) {
         if (result is Result.Success) {
-            categories = result.value.filterNot { it.hidden }
+            categories = result.value
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_list_item_1,

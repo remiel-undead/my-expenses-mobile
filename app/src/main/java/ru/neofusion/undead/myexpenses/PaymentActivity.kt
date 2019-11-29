@@ -15,9 +15,9 @@ class PaymentActivity : AppCompatActivity() {
         private const val KEY_SELLER = "seller"
         private const val KEY_COST_STRING = "costString"
 
-        fun getPaymentId(bundle: Bundle?) = bundle?.getInt(KEY_PAYMENT_ID)
+        fun getPaymentId(bundle: Bundle?) = bundle?.getInt(KEY_PAYMENT_ID, -1) ?: -1
 
-        fun getPaymentCategoryId(bundle: Bundle?) = bundle?.getInt(KEY_CATEGORY_ID)
+        fun getPaymentCategoryId(bundle: Bundle?) = bundle?.getInt(KEY_CATEGORY_ID, -1) ?: -1
 
         fun getDescription(bundle: Bundle?) = bundle?.getString(KEY_DESCRIPTION)
 
@@ -54,11 +54,11 @@ class PaymentActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().apply {
             replace(
                 R.id.paymentFragment,
-                if (paymentId != null)
+                if (paymentId != -1)
                     EditPaymentFragment.newInstance(paymentId)
                 else
                     AddPaymentFragment.newInstance(
-                        getPaymentCategoryId(bundle),
+                        getPaymentCategoryId(bundle).takeIf { it != -1 },
                         getDescription(bundle),
                         getSeller(bundle),
                         getCostString(bundle)

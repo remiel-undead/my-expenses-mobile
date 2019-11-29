@@ -69,14 +69,14 @@ class AddPaymentFragment(
 
     private fun doOnCategoriesResult(result: Result<List<Category>>) {
         if (result is Result.Success) {
-            categories = result.value
+            categories = result.value.filterNot { it.hidden }
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
-                result.value.map { it.name }
+                categories.map { it.name }
             )
             spinnerCategory.adapter = adapter
-            if (result.value.isNotEmpty()) {
+            if (categories.isNotEmpty()) {
                 spinnerCategory.setSelection(0)
             } else {
                 UiHelper.snack(requireActivity(), getString(R.string.error_no_categories))

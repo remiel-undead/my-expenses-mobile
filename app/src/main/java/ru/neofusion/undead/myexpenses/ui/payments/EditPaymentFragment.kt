@@ -14,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_edit_payment.*
+import kotlinx.android.synthetic.main.layout_edit_payment_controls.*
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
 import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
 import ru.neofusion.undead.myexpenses.PaymentActivity

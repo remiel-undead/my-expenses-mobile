@@ -7,68 +7,13 @@
     android:orientation="vertical"
     tools:context=".PaymentActivity">
 
-    <Spinner
-        android:id="@+id/spinnerCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@id/datePicker"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@android:layout/simple_list_item_1" />
-
-    <EditText
-        android:id="@+id/datePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
-        android:autofillHints="@string/hint_payment_date"
-        android:clickable="true"
-        android:focusable="false"
-        android:editable="false"
-        android:hint="@string/hint_payment_date"
-        app:layout_constraintBottom_toTopOf="@id/etDescription"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
-
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
-        android:hint="@string/hint_payment_description"
-        app:layout_constraintBottom_toTopOf="@id/etSeller"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/datePicker" />
-
-    <EditText
-        android:id="@+id/etSeller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
-        android:hint="@string/hint_payment_seller"
-        app:layout_constraintBottom_toTopOf="@id/etCost"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etDescription" />
-
-    <EditText
-        android:id="@+id/etCost"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/horizontal_margin"
-        android:hint="@string/hint_payment_cost"
-        android:inputType="numberDecimal"
-        android:digits="0123456789.,"
+    <include
+        android:id="@+id/editLayout"
+        layout="@layout/layout_edit_payment_controls"
         app:layout_constraintBottom_toTopOf="@id/addButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etSeller" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/addButton"
@@ -84,7 +29,7 @@
         android:text="@string/button_text_save"
         app:layout_constraintEnd_toStartOf="@id/addAndCreateNewButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etCost" />
+        app:layout_constraintTop_toBottomOf="@id/editLayout" />
 
     <Button
         android:id="@+id/addAndCreateNewButton"
@@ -101,5 +46,5 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/addButton"
-        app:layout_constraintTop_toBottomOf="@id/etCost" />
+        app:layout_constraintTop_toBottomOf="@id/editLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

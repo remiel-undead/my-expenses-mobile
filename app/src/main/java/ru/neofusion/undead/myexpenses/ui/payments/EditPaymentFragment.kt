@@ -148,12 +148,12 @@ class EditPaymentFragment(
 
     private fun initControls(payment: Payment) {
         spinnerCategory.adapter.count.takeIf { it > 0 }.let {
-            val index = categories.indexOfFirst { it.id == payment.categoryId }
+            val index = categories.indexOfFirst { it.id == payment.category.id }
             spinnerCategory.setSelection(if (index != -1) index else 0)
         }
         datePicker.setText(payment.date.formatToString())
-        etDescription.setText(payment.description ?: "")
-        etSeller.setText(payment.seller ?: "")
+        etDescription.setText(payment.description.orEmpty())
+        etSeller.setText(payment.seller.orEmpty())
         etCost.setText(payment.cost)
     }
 

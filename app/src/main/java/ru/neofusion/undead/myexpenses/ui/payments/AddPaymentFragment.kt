@@ -146,9 +146,9 @@ class AddPaymentFragment(
             val index = categories.indexOfFirst { it.id == categoryId }
             spinnerCategory.setSelection(if (index != -1) index else 0)
         }
-        etDescription.setText(description ?: "")
-        etSeller.setText(seller ?: "")
-        etCost.setText(costString ?: "")
+        etDescription.setText(description.orEmpty())
+        etSeller.setText(seller.orEmpty())
+        etCost.setText(costString.orEmpty())
     }
 
     private fun clearControls() {

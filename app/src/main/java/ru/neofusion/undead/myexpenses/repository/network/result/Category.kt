@@ -6,5 +6,6 @@ class Category(
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("parentId") val parentId: Int?,
+    @SerializedName("parentName") val parentName: String,
     @SerializedName("hidden") val hidden: Boolean
 )

@@ -1,6 +1,5 @@
 package ru.neofusion.undead.myexpenses.repository.network
 
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 import ru.neofusion.undead.myexpenses.repository.network.result.*

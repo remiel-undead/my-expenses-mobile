@@ -44,7 +44,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                         }
                         2 -> { // redo
                             val intent = Intent(activity, PaymentActivity::class.java)
-                            PaymentActivity.putCategoryId(intent, payment.categoryId)
+                            PaymentActivity.putCategoryId(intent, payment.category.id)
                             PaymentActivity.putDescription(intent, payment.description)
                             PaymentActivity.putSeller(intent, payment.seller)
                             PaymentActivity.putCostString(

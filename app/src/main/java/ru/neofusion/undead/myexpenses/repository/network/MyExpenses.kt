@@ -53,7 +53,7 @@ object MyExpenses {
 
         @JvmStatic
         fun logout(context: Context): Single<Result<Nothing>> =
-            Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty()}
                 .map { service.logout(it).execute() }
                 .map { response ->
                     Mapper.responseToResult<Nothing, Nothing>(response)
@@ -63,18 +63,11 @@ object MyExpenses {
     object CategoryApi {
         @JvmStatic
         fun getCategories(context: Context): Single<Result<List<Category>>> =
-            Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty()}
                 .map { service.getCategories(it).execute() }
                 .map { response ->
                     Mapper.responseToResult<List<ApiCategory>, List<Category>>(response) { apiCategories ->
-                        apiCategories.map {
-                            Category(
-                                it.id,
-                                it.name,
-                                it.parentId,
-                                it.hidden
-                            )
-                        }
+                        apiCategories.map { Mapper.mapToCategory(it) }
                     }
                 }
 
@@ -140,12 +133,7 @@ object MyExpenses {
                 }
                 .map { response ->
                     Mapper.responseToResult<ApiCategory, Category>(response) {
-                        Category(
-                            it.id,
-                            it.name,
-                            it.parentId,
-                            it.hidden
-                        )
+                        Mapper.mapToCategory(it)
                     }
                 }
     }
@@ -160,7 +148,7 @@ object MyExpenses {
             categoryId: Int? = null,
             useSubCategories: Boolean = true
         ): Single<Result<List<Payment>>> =
-            Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
                 .map {
                     service.getPayments(
                         it,
@@ -173,17 +161,7 @@ object MyExpenses {
                 }
                 .map { response ->
                     Mapper.responseToResult<List<ApiPayment>, List<Payment>>(response) { apiPayments ->
-                        apiPayments.map {
-                            Payment(
-                                it.id,
-                                it.category,
-                                it.categoryId,
-                                it.date,
-                                it.description,
-                                it.seller,
-                                it.cost
-                            )
-                        }
+                        apiPayments.map { Mapper.mapToPayment(it) }
                     }
                 }
 
@@ -196,7 +174,7 @@ object MyExpenses {
             seller: String,
             cost: String
         ): Single<Result<Int>> =
-            Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
                 .map { apiKey ->
                     service.addPayment(
                         apiKey,
@@ -225,7 +203,7 @@ object MyExpenses {
             seller: String,
             cost: String
         ): Single<Result<Int>> =
-            Single.fromCallable { AuthHelper.getKey(context) ?: "" }
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
                 .map { apiKey ->
                     service.editPayment(
                         apiKey,
@@ -251,15 +229,7 @@ object MyExpenses {
                 }
                 .map { response ->
                     Mapper.responseToResult<ApiPayment, Payment>(response) {
-                        Payment(
-                            it.id,
-                            it.category,
-                            it.categoryId,
-                            it.date,
-                            it.description,
-                            it.seller,
-                            it.cost
-                        )
+                        Mapper.mapToPayment(it)
                     }
                 }
 

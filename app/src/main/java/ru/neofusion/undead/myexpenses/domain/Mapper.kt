@@ -3,6 +3,8 @@ package ru.neofusion.undead.myexpenses.domain
 import com.google.gson.GsonBuilder
 import retrofit2.Response
 import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
+import ru.neofusion.undead.myexpenses.repository.network.result.Category as ApiCategory
+import ru.neofusion.undead.myexpenses.repository.network.result.Payment as ApiPayment
 
 object Mapper {
     private const val CODE_INVALID_LOGIN_PASSWORD = 100
@@ -17,7 +19,7 @@ object Mapper {
             getSuccess(response)?.let {
                 Result.Success(mapper?.invoke(it) ?: it as R)
             } ?: Result.Success(null as R)
-        }?: takeIf { response.code() == 401 }?.let {
+        } ?: takeIf { response.code() == 401 }?.let {
             Result.Error(
                 getErrorMessage(
                     response
@@ -32,7 +34,7 @@ object Mapper {
             errorBody ?: return@run null
 
             val validationResult =
-                 getValidationPairs(errorBody.validation)?.let { validationPairs ->
+                getValidationPairs(errorBody.validation)?.let { validationPairs ->
                     Result.Error(
                         "Ошибка валидации",
                         ValidationException(validationPairs)
@@ -77,4 +79,21 @@ object Mapper {
         } catch (e: Exception) {
             null
         }
+
+    fun mapToCategory(apiCategory: ApiCategory) = Category(
+        apiCategory.id,
+        apiCategory.name,
+        apiCategory.parentId,
+        apiCategory.parentName,
+        apiCategory.hidden
+    )
+
+    fun mapToPayment(apiPayment: ApiPayment) = Payment(
+        apiPayment.id,
+        mapToCategory(apiPayment.category),
+        apiPayment.date,
+        apiPayment.description,
+        apiPayment.seller,
+        apiPayment.cost
+    )
 }

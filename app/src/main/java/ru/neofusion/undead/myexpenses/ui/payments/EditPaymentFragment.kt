@@ -70,6 +70,8 @@ class EditPaymentFragment(
     private fun doOnPaymentResult(result: Result<Payment>) {
         if (result is Result.Success) {
             val payment = result.value
+            initAdapter(payment.category)
+
             initControls(payment)
         } else {
             UiHelper.snack(requireActivity(), (result as Result.Error).message)
@@ -79,22 +81,29 @@ class EditPaymentFragment(
     private fun doOnCategoriesResult(result: Result<List<Category>>) {
         if (result is Result.Success) {
             categories = result.value.filterNot { it.hidden }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_list_item_1,
-                categories.map { it.name }
-            )
-            spinnerCategory.adapter = adapter
-            if (categories.isNotEmpty()) {
-                spinnerCategory.setSelection(0)
-            } else {
-                UiHelper.snack(requireActivity(), getString(R.string.error_no_categories))
-                requireActivity().finish()
-            }
-            adapter.notifyDataSetChanged()
         } else {
             UiHelper.snack(requireActivity(), (result as Result.Error).message)
         }
+    }
+
+    private fun initAdapter(category: Category) {
+        if (categories.firstOrNull { it.id == category.id } == null) {
+            categories = categories.plus(category)
+        }
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            categories.map { it.name }
+        )
+        spinnerCategory.adapter = adapter
+        if (categories.isNotEmpty()) {
+            spinnerCategory.setSelection(0)
+        } else {
+            UiHelper.snack(requireActivity(), getString(R.string.error_no_categories))
+            requireActivity().finish()
+        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

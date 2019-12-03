@@ -21,7 +21,7 @@ import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class EditCategoryFragment(
-    val categoryId: Int
+    private val categoryId: Int
 ) : Fragment() {
 
     companion object {

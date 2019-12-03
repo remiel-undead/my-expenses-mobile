@@ -125,7 +125,6 @@ class AddPaymentFragment(
 
         addButton.setOnClickListener {
             addPayment { paymentId ->
-                UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
                 finishWithSuccess(paymentId)
             }
         }

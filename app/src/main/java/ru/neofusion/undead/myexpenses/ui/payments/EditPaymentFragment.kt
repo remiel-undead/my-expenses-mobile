@@ -139,7 +139,6 @@ class EditPaymentFragment(
 
         saveButton.setOnClickListener {
             savePayment { paymentId ->
-                UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
                 finishWithSuccess(paymentId)
             }
         }

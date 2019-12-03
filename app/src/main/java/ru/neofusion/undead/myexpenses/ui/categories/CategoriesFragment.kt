@@ -1,5 +1,6 @@
 package ru.neofusion.undead.myexpenses.ui.categories
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +14,14 @@ import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
+import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class CategoriesFragment : BaseListViewModelFragment<Category>() {
+    companion object {
+        private const val REQUEST_CODE_EDIT_CATEGORY = 10000
+        private const val REQUEST_CODE_ADD_CATEGORY = 10001
+    }
+
     interface CategoryLongClickListener {
         fun onCategorytLongClick(category: Category)
     }
@@ -30,7 +37,7 @@ class CategoriesFragment : BaseListViewModelFragment<Category>() {
                         0 -> { // edit
                             val intent = Intent(activity, CategoryActivity::class.java)
                             CategoryActivity.putCategoryId(intent, category.id)
-                            startActivity(intent)
+                            startActivityForResult(intent, REQUEST_CODE_EDIT_CATEGORY)
                         }
                         1 -> { // add payment to cat
 
@@ -63,12 +70,32 @@ class CategoriesFragment : BaseListViewModelFragment<Category>() {
         recyclerView.adapter = categoriesAdapter
 
         addButton.setOnClickListener {
-            startActivity(Intent(activity, CategoryActivity::class.java))
+            startActivityForResult(
+                Intent(activity, CategoryActivity::class.java),
+                REQUEST_CODE_ADD_CATEGORY
+            )
         }
         longClickOptions = arrayOf(
             getString(R.string.long_tap_option_edit),
             getString(R.string.long_tap_option_add_payment_to_category),
             getString(R.string.long_tap_option_find_payments_by_category)
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            val categoryId = CategoryActivity.getCategoryId(data?.extras)
+            if (categoryId != -1) {
+                when (requestCode) {
+                    REQUEST_CODE_ADD_CATEGORY -> {
+                        UiHelper.snack(requireActivity(), "Добавлена категория $categoryId")
+                    }
+                    REQUEST_CODE_EDIT_CATEGORY -> {
+                        UiHelper.snack(requireActivity(), "Отредактирована категория $categoryId")
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

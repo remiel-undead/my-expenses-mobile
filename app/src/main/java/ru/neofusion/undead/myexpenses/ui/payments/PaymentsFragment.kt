@@ -1,5 +1,6 @@
 package ru.neofusion.undead.myexpenses.ui.payments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +21,11 @@ import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class PaymentsFragment : BaseListViewModelFragment<Payment>() {
+    companion object {
+        private const val REQUEST_CODE_EDIT_PAYMENT = 10000
+        private const val REQUEST_CODE_ADD_PAYMENT = 10001
+    }
+
     interface PaymentLongClickListener {
         fun onPaymentLongClick(payment: Payment)
     }
@@ -37,7 +43,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                         0 -> { // edit
                             val intent = Intent(activity, PaymentActivity::class.java)
                             PaymentActivity.putPaymentId(intent, payment.id)
-                            startActivity(intent)
+                            startActivityForResult(intent, REQUEST_CODE_EDIT_PAYMENT)
                         }
                         1 -> {
 
@@ -51,7 +57,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                                 intent,
                                 payment.cost
                             )
-                            startActivity(intent)
+                            startActivityForResult(intent, REQUEST_CODE_ADD_PAYMENT)
                         }
                         3 -> { // delete
                             showDeletePaymentDialog(payment.id)
@@ -80,7 +86,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
         recyclerView.adapter = paymentsAdapter
 
         addButton.setOnClickListener {
-            startActivity(Intent(activity, PaymentActivity::class.java))
+            startActivityForResult(Intent(activity, PaymentActivity::class.java), REQUEST_CODE_ADD_PAYMENT)
         }
         longClickOptions = arrayOf(
             getString(R.string.long_tap_option_edit),
@@ -119,5 +125,22 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                 dialog.dismiss()
             }.create()
         dialog.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            val paymentId = PaymentActivity.getPaymentId(data?.extras)
+            if (paymentId != -1) {
+                when (requestCode) {
+                    REQUEST_CODE_ADD_PAYMENT -> {
+                        UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
+                    }
+                    REQUEST_CODE_EDIT_PAYMENT -> {
+                        UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

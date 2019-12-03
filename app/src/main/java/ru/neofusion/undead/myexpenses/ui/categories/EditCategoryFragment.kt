@@ -95,7 +95,6 @@ class EditCategoryFragment(
 
         saveButton.setOnClickListener {
             saveCategory { categoryId ->
-                UiHelper.snack(requireActivity(), "Добавлена категория $categoryId")
                 finishWithSuccess(categoryId)
             }
         }
@@ -140,7 +139,7 @@ class EditCategoryFragment(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     if (result is Result.Success) {
-                        doOnSuccess.invoke(result.value)
+                        doOnSuccess.invoke(categoryId)
                     } else {
                         UiHelper.snack(requireActivity(), (result as Result.Error).message)
                     }

@@ -83,7 +83,6 @@ class AddCategoryFragment : Fragment() {
 
         addButton.setOnClickListener {
             addCategory { categoryId ->
-                UiHelper.snack(requireActivity(), "Добавлена категория $categoryId")
                 finishWithSuccess(categoryId)
             }
         }

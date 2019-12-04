@@ -15,7 +15,11 @@ class PaymentActivity : AppCompatActivity() {
         private const val KEY_SELLER = "seller"
         private const val KEY_COST_STRING = "costString"
 
+        private const val KEY_OPERATION = "operation"
+
         fun getPaymentId(bundle: Bundle?) = bundle?.getInt(KEY_PAYMENT_ID, -1) ?: -1
+
+        fun getOperation(bundle: Bundle?) = bundle?.getString(KEY_OPERATION)
 
         fun getPaymentCategoryId(bundle: Bundle?) = bundle?.getInt(KEY_CATEGORY_ID, -1) ?: -1
 
@@ -44,6 +48,14 @@ class PaymentActivity : AppCompatActivity() {
         fun putCostString(intent: Intent, costString: String?) {
             intent.putExtra(KEY_COST_STRING, costString)
         }
+
+        fun putOperation(intent: Intent, operation: Operation) {
+            intent.putExtra(KEY_OPERATION, operation.name)
+        }
+    }
+
+    enum class Operation {
+        ADD, EDIT, REDO
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -33,6 +33,8 @@ class EditPaymentFragment(
 ) : Fragment() {
 
     companion object {
+        private const val REQUEST_CODE_REDO_PAYMENT = 1000
+
         fun newInstance(
             paymentId: Int
         ): EditPaymentFragment =
@@ -139,12 +141,10 @@ class EditPaymentFragment(
 
         saveButton.setOnClickListener {
             savePayment { paymentId ->
-                finishWithSuccess(paymentId)
+                finishWithSuccess(paymentId, PaymentActivity.Operation.EDIT)
             }
         }
-        redoButton.setOnClickListener {
-            // TODO redo from edit
-        }
+
         deleteButton.setOnClickListener {
             // TODO delete
         }
@@ -163,6 +163,18 @@ class EditPaymentFragment(
         etDescription.setText(payment.description.orEmpty())
         etSeller.setText(payment.seller.orEmpty())
         etCost.setText(payment.cost)
+
+        redoButton.setOnClickListener {
+            val intent = Intent(activity, PaymentActivity::class.java)
+            PaymentActivity.putCategoryId(intent, payment.category.id)
+            PaymentActivity.putDescription(intent, payment.description)
+            PaymentActivity.putSeller(intent, payment.seller)
+            PaymentActivity.putCostString(
+                intent,
+                payment.cost
+            )
+            startActivityForResult(intent, REQUEST_CODE_REDO_PAYMENT)
+        }
     }
 
     private fun savePayment(doOnSuccess: (Int) -> Unit) {
@@ -208,10 +220,13 @@ class EditPaymentFragment(
         )
     }
 
-    private fun finishWithSuccess(paymentId: Int) {
+    private fun finishWithSuccess(paymentId: Int, operation: PaymentActivity.Operation) {
         requireActivity().setResult(
             RESULT_OK,
-            Intent().apply { PaymentActivity.putPaymentId(this, paymentId) })
+            Intent().apply {
+                PaymentActivity.putPaymentId(this, paymentId)
+                PaymentActivity.putOperation(this, operation)
+            })
         requireActivity().finish()
     }
 
@@ -226,5 +241,19 @@ class EditPaymentFragment(
             result = false
         }
         return result
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            val paymentId = PaymentActivity.getPaymentId(data?.extras)
+            if (paymentId != -1) {
+                when (requestCode) {
+                    REQUEST_CODE_REDO_PAYMENT -> {
+                        finishWithSuccess(paymentId, PaymentActivity.Operation.REDO)
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

@@ -22,8 +22,8 @@ import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class PaymentsFragment : BaseListViewModelFragment<Payment>() {
     companion object {
-        private const val REQUEST_CODE_EDIT_PAYMENT = 10000
-        private const val REQUEST_CODE_ADD_PAYMENT = 10001
+        private const val REQUEST_CODE_EDIT_PAYMENT = 1000
+        private const val REQUEST_CODE_ADD_PAYMENT = 1001
     }
 
     interface PaymentLongClickListener {
@@ -130,13 +130,18 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             val paymentId = PaymentActivity.getPaymentId(data?.extras)
+            val operation = PaymentActivity.getOperation(data?.extras)
             if (paymentId != -1) {
                 when (requestCode) {
                     REQUEST_CODE_ADD_PAYMENT -> {
                         UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
                     }
                     REQUEST_CODE_EDIT_PAYMENT -> {
-                        UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
+                        if (operation == PaymentActivity.Operation.REDO.name) {
+                            UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
+                        } else {
+                            UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
+                        }
                     }
                 }
             }

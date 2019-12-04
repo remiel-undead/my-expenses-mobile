@@ -18,8 +18,8 @@ import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class CategoriesFragment : BaseListViewModelFragment<Category>() {
     companion object {
-        private const val REQUEST_CODE_EDIT_CATEGORY = 10000
-        private const val REQUEST_CODE_ADD_CATEGORY = 10001
+        private const val REQUEST_CODE_EDIT_CATEGORY = 1000
+        private const val REQUEST_CODE_ADD_CATEGORY = 1001
     }
 
     interface CategoryLongClickListener {

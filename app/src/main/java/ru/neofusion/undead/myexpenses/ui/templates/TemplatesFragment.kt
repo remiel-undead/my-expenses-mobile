@@ -1,18 +1,24 @@
 package ru.neofusion.undead.myexpenses.ui.templates
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_base_list.*
+import ru.neofusion.undead.myexpenses.TemplateActivity
 import ru.neofusion.undead.myexpenses.domain.Template
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 
 class TemplatesFragment : BaseListViewModelFragment<Template>() {
+    companion object {
+        private const val REQUEST_CODE_ADD_TEMPLATE = 1000
+    }
+
     interface TemplateLongClickListener {
         fun onTemplateLongClick(template: Template)
     }
@@ -52,7 +58,9 @@ class TemplatesFragment : BaseListViewModelFragment<Template>() {
         recyclerView.adapter = templatesAdapter
 
         addButton.setOnClickListener {
-            // TODO
+            startActivityForResult(
+                Intent(activity, TemplateActivity::class.java), REQUEST_CODE_ADD_TEMPLATE
+            )
         }
         longClickOptions = arrayOf(
             // TODO

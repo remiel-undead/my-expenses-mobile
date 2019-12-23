@@ -16,15 +16,16 @@
 
     <string name="empty_content_text">Здесь пусто.</string>
 
+    <string name="button_text_save">Сохранить</string>
+    <string name="button_text_redo">Повторить</string>
+    <string name="button_text_delete">Удалить</string>
+
     <!-- Payment -->
     <string name="hint_payment_category">Категория</string>
     <string name="hint_payment_date">Дата</string>
     <string name="hint_payment_description">Описание</string>
     <string name="hint_payment_seller">Продавец</string>
     <string name="hint_payment_cost">Стоимость</string>
-    <string name="button_text_save">Сохранить</string>
-    <string name="button_text_redo">Повторить</string>
-    <string name="button_text_delete">Удалить</string>
     <string name="button_text_save_and_add_new">Сохранить и добавить следующий</string>
     <string name="error_no_categories">Не найдено ни одной категории</string>
     <string name="delete_payment_dialog_message">Вы действительно хотите удалить платеж?</string>
@@ -42,4 +43,11 @@
     <string name="hint_category_parent_category">Родительская категория</string>
     <string name="hint_category_parent_hidden">Скрытый</string>
     <string name="no_parent_category">\u003CНет\u003E</string>
+
+    <!-- Template -->
+    <string name="hint_template_category">Категория</string>
+    <string name="hint_template_description">Описание</string>
+    <string name="hint_template_seller">Продавец</string>
+    <string name="hint_template_cost">Стоимость</string>
+
 </resources>

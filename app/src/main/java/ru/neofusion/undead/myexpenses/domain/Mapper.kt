@@ -5,6 +5,7 @@ import retrofit2.Response
 import ru.neofusion.undead.myexpenses.repository.network.result.ApiResult
 import ru.neofusion.undead.myexpenses.repository.network.result.Category as ApiCategory
 import ru.neofusion.undead.myexpenses.repository.network.result.Payment as ApiPayment
+import ru.neofusion.undead.myexpenses.repository.network.result.Template as ApiTemplate
 
 object Mapper {
     private const val CODE_INVALID_LOGIN_PASSWORD = 100
@@ -95,5 +96,13 @@ object Mapper {
         apiPayment.description,
         apiPayment.seller,
         apiPayment.cost
+    )
+
+    fun mapToTemplate(apiTemplate: ApiTemplate) = Template(
+        apiTemplate.id,
+        mapToCategory(apiTemplate.category),
+        apiTemplate.description,
+        apiTemplate.seller,
+        apiTemplate.cost
     )
 }

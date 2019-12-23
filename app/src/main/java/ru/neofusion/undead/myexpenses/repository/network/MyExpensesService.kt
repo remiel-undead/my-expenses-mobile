@@ -67,4 +67,34 @@ interface MyExpensesService {
         @Header("API-Key") apiKey: String,
         @Path("id") id: Int
     ): Call<ApiResult<Nothing>>
+
+    @GET("/api/v1/templates")
+    fun getTemplates(
+        @Header("API-Key") apiKey: String
+    ): Call<ApiResult<List<Template>>>
+
+    @POST("/api/v1/templates")
+    fun addTemplate(
+        @Header("API-Key") apiKey: String,
+        @Body template: ru.neofusion.undead.myexpenses.repository.network.request.Template
+    ): Call<ApiResult<Id>>
+
+    @PUT("/api/v1/templates/{id}")
+    fun editTemplate(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int,
+        @Body template: ru.neofusion.undead.myexpenses.repository.network.request.Template
+    ): Call<ApiResult<Nothing>>
+
+    @GET("/api/v1/templates/{id}")
+    fun getTemplate(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int
+    ): Call<ApiResult<Template>>
+
+    @DELETE("/api/v1/templates/{id}")
+    fun deleteTemplate(
+        @Header("API-Key") apiKey: String,
+        @Path("id") id: Int
+    ): Call<ApiResult<Nothing>>
 }

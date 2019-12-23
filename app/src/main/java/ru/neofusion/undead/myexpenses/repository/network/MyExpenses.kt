@@ -7,18 +7,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.neofusion.undead.myexpenses.BuildConfig
 import ru.neofusion.undead.myexpenses.DateUtils.formatToString
-import ru.neofusion.undead.myexpenses.domain.Category
-import ru.neofusion.undead.myexpenses.domain.Mapper
-import ru.neofusion.undead.myexpenses.domain.Payment
-import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.repository.network.result.Id
+import ru.neofusion.undead.myexpenses.domain.*
+import ru.neofusion.undead.myexpenses.repository.network.result.*
 import ru.neofusion.undead.myexpenses.repository.network.result.Category as ApiCategory
-import ru.neofusion.undead.myexpenses.repository.network.result.Key
-import ru.neofusion.undead.myexpenses.repository.network.result.Login
-import ru.neofusion.undead.myexpenses.repository.network.result.Order
 import ru.neofusion.undead.myexpenses.repository.network.result.Payment as ApiPayment
+import ru.neofusion.undead.myexpenses.repository.network.result.Template as ApiTemplate
 import ru.neofusion.undead.myexpenses.repository.network.request.Category as RequestCategory
 import ru.neofusion.undead.myexpenses.repository.network.request.Payment as RequestPayment
+import ru.neofusion.undead.myexpenses.repository.network.request.Template as RequestTemplate
 import ru.neofusion.undead.myexpenses.repository.storage.AuthHelper
 import java.util.*
 
@@ -53,7 +49,7 @@ object MyExpenses {
 
         @JvmStatic
         fun logout(context: Context): Single<Result<Nothing>> =
-            Single.fromCallable { AuthHelper.getKey(context).orEmpty()}
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
                 .map { service.logout(it).execute() }
                 .map { response ->
                     Mapper.responseToResult<Nothing, Nothing>(response)
@@ -63,7 +59,7 @@ object MyExpenses {
     object CategoryApi {
         @JvmStatic
         fun getCategories(context: Context): Single<Result<List<Category>>> =
-            Single.fromCallable { AuthHelper.getKey(context).orEmpty()}
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
                 .map { service.getCategories(it).execute() }
                 .map { response ->
                     Mapper.responseToResult<List<ApiCategory>, List<Category>>(response) { apiCategories ->
@@ -238,6 +234,94 @@ object MyExpenses {
             Single.fromCallable { AuthHelper.getKey(context) }
                 .map { apiKey ->
                     service.deletePayment(apiKey, id).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<Nothing, Nothing>(response)
+                }
+    }
+
+    object TemplateApi {
+        @JvmStatic
+        fun getTemplates(context: Context): Single<Result<List<Template>>> =
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
+                .map { apiKey ->
+                    service.getTemplates(apiKey).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<List<ApiTemplate>, List<Template>>(response) { apiTemplates ->
+                        apiTemplates.map { Mapper.mapToTemplate(it) }
+                    }
+                }
+
+        @JvmStatic
+        fun addTemplate(
+            context: Context,
+            categoryId: Int,
+            description: String,
+            seller: String,
+            cost: String
+        ): Single<Result<Int>> =
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
+                .map { apiKey ->
+                    service.addTemplate(
+                        apiKey,
+                        RequestTemplate(
+                            categoryId,
+                            description,
+                            seller,
+                            cost
+                        )
+                    ).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<Id, Int>(response) {
+                        it.id
+                    }
+                }
+
+        @JvmStatic
+        fun editTemplate(
+            context: Context,
+            id: Int,
+            categoryId: Int,
+            description: String,
+            seller: String,
+            cost: String
+        ): Single<Result<Int>> =
+            Single.fromCallable { AuthHelper.getKey(context).orEmpty() }
+                .map { apiKey ->
+                    service.editTemplate(
+                        apiKey,
+                        id,
+                        RequestTemplate(
+                            categoryId,
+                            description,
+                            seller,
+                            cost
+                        )
+                    ).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<Nothing, Nothing>(response)
+                }
+
+        @JvmStatic
+        fun getTemplate(context: Context, id: Int): Single<Result<Template>> =
+            Single.fromCallable { AuthHelper.getKey(context) }
+                .map { apiKey ->
+                    service.getTemplate(apiKey, id).execute()
+                }
+                .map { response ->
+                    Mapper.responseToResult<ApiTemplate, Template>(response) {
+                        Mapper.mapToTemplate(it)
+                    }
+                }
+
+        @JvmStatic
+        fun deleteTemplate(context: Context, id: Int): Single<Result<Nothing>> =
+            Single.fromCallable { AuthHelper.getKey(context) }
+                .map { apiKey ->
+                    service.deleteTemplate(apiKey, id).execute()
                 }
                 .map { response ->
                     Mapper.responseToResult<Nothing, Nothing>(response)

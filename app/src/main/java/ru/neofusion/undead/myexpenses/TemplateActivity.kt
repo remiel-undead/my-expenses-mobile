@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.neofusion.undead.myexpenses.ui.templates.AddTemplateFragment
+import ru.neofusion.undead.myexpenses.ui.templates.EditTemplateFragment
 
 class TemplateActivity : AppCompatActivity() {
     companion object {
@@ -24,8 +25,8 @@ class TemplateActivity : AppCompatActivity() {
 
         fun getCostString(bundle: Bundle?) = bundle?.getString(KEY_COST_STRING)
 
-        fun putTemplateId(intent: Intent, paymentId: Int) {
-            intent.putExtra(KEY_TEMPLATE_ID, paymentId)
+        fun putTemplateId(intent: Intent, templateId: Int) {
+            intent.putExtra(KEY_TEMPLATE_ID, templateId)
         }
 
         fun putCategoryId(intent: Intent, categoryId: Int?) {
@@ -53,9 +54,9 @@ class TemplateActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().apply {
             replace(
                 R.id.templateFragment,
-                /*if (templateId != -1)
+                if (templateId != -1)
                     EditTemplateFragment.newInstance(templateId)
-                else*/
+                else
                     AddTemplateFragment.newInstance(
                         getTemplateCategoryId(bundle).takeIf { it != -1 },
                         getDescription(bundle),

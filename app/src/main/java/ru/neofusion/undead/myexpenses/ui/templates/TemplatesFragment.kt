@@ -40,6 +40,9 @@ class TemplatesFragment : BaseListViewModelFragment<Template>() {
                 .setItems(longClickOptions) { _, which ->
                     when (which) {
                         0 -> { // edit
+                            val intent = Intent(activity, TemplateActivity::class.java)
+                            TemplateActivity.putTemplateId(intent, template.id)
+                            startActivityForResult(intent, REQUEST_CODE_EDIT_TEMPLATE)
 
                         }
                         1 -> { // delete

@@ -121,7 +121,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                 )
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.delete_payment_dialog_cancel) { dialog, _ ->
+            .setNegativeButton(R.string.button_text_cancel) { dialog, _ ->
                 dialog.dismiss()
             }.create()
         dialog.show()

@@ -6,17 +6,23 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_base_list.*
+import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.TemplateActivity
 import ru.neofusion.undead.myexpenses.domain.Template
 import ru.neofusion.undead.myexpenses.domain.Result
+import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
+import ru.neofusion.undead.myexpenses.ui.UiHelper
 
 class TemplatesFragment : BaseListViewModelFragment<Template>() {
     companion object {
         private const val REQUEST_CODE_ADD_TEMPLATE = 1000
+        private const val REQUEST_CODE_EDIT_TEMPLATE = 1001
     }
 
     interface TemplateLongClickListener {
@@ -33,11 +39,42 @@ class TemplatesFragment : BaseListViewModelFragment<Template>() {
             val dialog = AlertDialog.Builder(requireContext())
                 .setItems(longClickOptions) { _, which ->
                     when (which) {
-                        // TODO
+                        0 -> { // edit
+
+                        }
+                        1 -> { // delete
+                            showDeleteTemplateDialog(template.id)
+                        }
                     }
                 }.create()
             dialog.show()
         }
+    }
+
+    private fun showDeleteTemplateDialog(templateId: Int) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage(R.string.delete_template_dialog_message)
+            .setPositiveButton(R.string.button_text_delete) { dialog, _ ->
+                compositeDisposable.add(
+                    MyExpenses.TemplateApi.deleteTemplate(requireContext(), templateId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ result ->
+                            if (result is Result.Success) {
+                                UiHelper.snack(requireActivity(), "Шаблон $templateId удален")
+                            } else {
+                                UiHelper.snack(requireActivity(), (result as Result.Error).message)
+                            }
+                        }, {
+                            UiHelper.snack(requireActivity(), it.message ?: "Ой-ой-ой")
+                        })
+                )
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.button_text_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }.create()
+        dialog.show()
     }
 
     override val viewModel: ResultViewModel<List<Template>>
@@ -63,7 +100,8 @@ class TemplatesFragment : BaseListViewModelFragment<Template>() {
             )
         }
         longClickOptions = arrayOf(
-            // TODO
+            getString(R.string.long_tap_option_edit),
+            getString(R.string.long_tap_option_delete)
         )
     }
 

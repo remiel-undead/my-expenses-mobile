@@ -19,6 +19,7 @@
     <string name="button_text_save">Сохранить</string>
     <string name="button_text_redo">Повторить</string>
     <string name="button_text_delete">Удалить</string>
+    <string name="button_text_cancel">Отмена</string>
 
     <!-- Payment -->
     <string name="hint_payment_category">Категория</string>
@@ -29,7 +30,6 @@
     <string name="button_text_save_and_add_new">Сохранить и добавить следующий</string>
     <string name="error_no_categories">Не найдено ни одной категории</string>
     <string name="delete_payment_dialog_message">Вы действительно хотите удалить платеж?</string>
-    <string name="delete_payment_dialog_cancel">Отмена</string>
 
     <string name="long_tap_option_edit">Редактировать</string>
     <string name="long_tap_option_add_as_template">Добавить как шаблон</string>
@@ -49,5 +49,6 @@
     <string name="hint_template_description">Описание</string>
     <string name="hint_template_seller">Продавец</string>
     <string name="hint_template_cost">Стоимость</string>
+    <string name="delete_template_dialog_message">Вы действительно хотите удалить шаблон?</string>
 
 </resources>

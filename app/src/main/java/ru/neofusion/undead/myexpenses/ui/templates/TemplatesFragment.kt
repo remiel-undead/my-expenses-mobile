@@ -1,5 +1,6 @@
 package ru.neofusion.undead.myexpenses.ui.templates
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -111,5 +112,22 @@ class TemplatesFragment : BaseListViewModelFragment<Template>() {
     override fun onDetach() {
         super.onDetach()
         compositeDisposable.dispose()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            val templateId = TemplateActivity.getTemplateId(data?.extras)
+            if (templateId != -1) {
+                when (requestCode) {
+                    REQUEST_CODE_ADD_TEMPLATE -> {
+                        UiHelper.snack(requireActivity(), "Добавлен шаблон $templateId")
+                    }
+                    REQUEST_CODE_EDIT_TEMPLATE -> {
+                        UiHelper.snack(requireActivity(), "Отредактирован шаблон $templateId")
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

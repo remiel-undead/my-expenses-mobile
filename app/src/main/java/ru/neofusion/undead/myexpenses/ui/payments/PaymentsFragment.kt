@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
+import ru.neofusion.undead.myexpenses.TemplateActivity
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
@@ -24,6 +25,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
     companion object {
         private const val REQUEST_CODE_EDIT_PAYMENT = 1000
         private const val REQUEST_CODE_ADD_PAYMENT = 1001
+        private const val REQUEST_CODE_ADD_AS_TEMPLATE = 1002
     }
 
     interface PaymentLongClickListener {
@@ -45,8 +47,13 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                             PaymentActivity.putPaymentId(intent, payment.id)
                             startActivityForResult(intent, REQUEST_CODE_EDIT_PAYMENT)
                         }
-                        1 -> {
-
+                        1 -> { // add as template
+                            val intent = Intent(activity, TemplateActivity::class.java)
+                            TemplateActivity.putCategoryId(intent, payment.category.id)
+                            TemplateActivity.putDescription(intent, payment.description)
+                            TemplateActivity.putSeller(intent, payment.seller)
+                            TemplateActivity.putCostString(intent, payment.cost)
+                            startActivityForResult(intent, REQUEST_CODE_ADD_AS_TEMPLATE)
                         }
                         2 -> { // redo
                             val intent = Intent(activity, PaymentActivity::class.java)
@@ -86,7 +93,10 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
         recyclerView.adapter = paymentsAdapter
 
         addButton.setOnClickListener {
-            startActivityForResult(Intent(activity, PaymentActivity::class.java), REQUEST_CODE_ADD_PAYMENT)
+            startActivityForResult(
+                Intent(activity, PaymentActivity::class.java),
+                REQUEST_CODE_ADD_PAYMENT
+            )
         }
         longClickOptions = arrayOf(
             getString(R.string.long_tap_option_edit),
@@ -142,6 +152,14 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                         } else {
                             UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
                         }
+                    }
+                }
+            }
+            val templateId = TemplateActivity.getTemplateId(data?.extras)
+            if (templateId != -1) {
+                when(requestCode) {
+                    REQUEST_CODE_ADD_AS_TEMPLATE -> {
+                        UiHelper.snack(requireActivity(), "Добавлен шаблон $templateId")
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package ru.neofusion.undead.myexpenses.ui.payments
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
@@ -146,7 +147,7 @@ class EditPaymentFragment(
         }
 
         deleteButton.setOnClickListener {
-            // TODO delete
+            showDeletePaymentDialog(paymentId)
         }
 
         etCost.addTextChangedListener(RoublesTextWatcher(etCost))
@@ -255,5 +256,45 @@ class EditPaymentFragment(
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun showDeletePaymentDialog(paymentId: Int) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage(R.string.delete_payment_dialog_message)
+            .setPositiveButton(R.string.button_text_delete) { dialog, _ ->
+                compositeDisposable.add(
+                    MyExpenses.PaymentApi.deletePayment(requireContext(), paymentId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe {
+                            requireActivity().runOnUiThread {
+                                saveButton.isEnabled = false
+                                redoButton.isEnabled = false
+                                deleteButton.isEnabled = false
+                            }
+                        }
+                        .doOnTerminate {
+                            requireActivity().runOnUiThread {
+                                saveButton.isEnabled = true
+                                redoButton.isEnabled = true
+                                deleteButton.isEnabled = true
+                            }
+                        }
+                        .subscribe({ result ->
+                            if (result is Result.Success) {
+                                finishWithSuccess(paymentId, PaymentActivity.Operation.DELETE)
+                            } else {
+                                UiHelper.snack(requireActivity(), (result as Result.Error).message)
+                            }
+                        }, {
+                            UiHelper.snack(requireActivity(), it.message ?: "Ой-ой-ой")
+                        })
+                )
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.button_text_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }.create()
+        dialog.show()
     }
 }

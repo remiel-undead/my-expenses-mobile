@@ -55,7 +55,7 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     enum class Operation {
-        ADD, EDIT, REDO
+        ADD, EDIT, REDO, DELETE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

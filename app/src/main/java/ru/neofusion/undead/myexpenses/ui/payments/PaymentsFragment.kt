@@ -147,17 +147,26 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
                         UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
                     }
                     REQUEST_CODE_EDIT_PAYMENT -> {
-                        if (operation == PaymentActivity.Operation.REDO.name) {
-                            UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
-                        } else {
-                            UiHelper.snack(requireActivity(), "Отредактирован платеж $paymentId")
+                        when (operation) {
+                            PaymentActivity.Operation.REDO.name -> {
+                                UiHelper.snack(requireActivity(), "Добавлен платеж $paymentId")
+                            }
+                            PaymentActivity.Operation.EDIT.name -> {
+                                UiHelper.snack(
+                                    requireActivity(),
+                                    "Отредактирован платеж $paymentId"
+                                )
+                            }
+                            PaymentActivity.Operation.DELETE.name -> {
+                                UiHelper.snack(requireActivity(), "Удален платеж $paymentId")
+                            }
                         }
                     }
                 }
             }
             val templateId = TemplateActivity.getTemplateId(data?.extras)
             if (templateId != -1) {
-                when(requestCode) {
+                when (requestCode) {
                     REQUEST_CODE_ADD_AS_TEMPLATE -> {
                         UiHelper.snack(requireActivity(), "Добавлен шаблон $templateId")
                     }

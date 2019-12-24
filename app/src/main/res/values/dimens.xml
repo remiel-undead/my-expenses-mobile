@@ -3,6 +3,7 @@
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="horizontal_margin_small">8dp</dimen>
     <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="vertical_margin_small">8dp</dimen>
 
     <dimen name="payment_card_height">120dp</dimen>
     <dimen name="payment_card_cost_width">120dp</dimen>

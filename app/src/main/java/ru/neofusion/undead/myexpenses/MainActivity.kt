@@ -49,11 +49,6 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.navigation_filter_payments)?.isVisible = false
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_logout -> {

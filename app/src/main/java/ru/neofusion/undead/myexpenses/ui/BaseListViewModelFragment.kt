@@ -2,6 +2,8 @@ package ru.neofusion.undead.myexpenses.ui
 
 import android.os.Bundle
 import android.view.View
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.R
 
@@ -18,5 +20,6 @@ abstract class BaseListViewModelFragment<T : Any?> : BaseViewModelFragment<List<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipeRefreshLayout.setOnRefreshListener { loadViewData() }
+        slidingLayout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
     }
 }

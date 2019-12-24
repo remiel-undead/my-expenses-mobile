@@ -4,12 +4,16 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
@@ -104,6 +108,7 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
             getString(R.string.long_tap_option_redo),
             getString(R.string.long_tap_option_delete)
         )
+        slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
 
     override fun onDetach() {
@@ -174,5 +179,41 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.navigation_filter_payments)?.apply {
+            isVisible = true
+            when (slidingLayout.panelState) {
+                SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                    icon = resources.getDrawable(R.drawable.ic_unfold_more_white_24dp)
+                }
+                SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                    icon = resources.getDrawable(R.drawable.ic_unfold_less_white_24dp)
+                }
+            }
+        }
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navigation_filter_payments -> {
+                showHideFilterPanel()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showHideFilterPanel() {
+        when (slidingLayout.panelState) {
+            SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                slidingLayout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            }
+            SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            }
+        }
+        requireActivity().invalidateOptionsMenu()
     }
 }

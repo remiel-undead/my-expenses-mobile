@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.PaymentActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.TemplateActivity
+import ru.neofusion.undead.myexpenses.domain.FilterPanelSettings
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
@@ -109,7 +110,9 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        filterPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+
+        initPanelControls()
     }
 
     override fun onDetach() {
@@ -180,5 +183,19 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun initPanelControls() {
+        // TODO setup controls (categories, periods)
+        filterPanel.findButton.setOnClickListener {
+            (viewModel as PaymentsViewModel).setFilterPanelSettings(
+                FilterPanelSettings(
+                    filterPanel.datePickerStart.text.toString(),
+                    filterPanel.datePickerEnd.text.toString(),
+                    filterPanel.spinnerCategory.selectedItemId,
+                )
+            )
+            loadViewData()
+        }
     }
 }

@@ -1,27 +1,40 @@
 package ru.neofusion.undead.myexpenses.ui.payments
 
 import android.content.Context
+import io.reactivex.Single
+import ru.neofusion.undead.myexpenses.DateUtils.formatToDate
+import ru.neofusion.undead.myexpenses.PeriodUtils.getDates
+import ru.neofusion.undead.myexpenses.domain.FilterPanelSettings
+import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
 import ru.neofusion.undead.myexpenses.repository.network.result.Order
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
-import ru.neofusion.undead.myexpenses.DateUtils.plus
 import java.util.*
 
 class PaymentsViewModel : ResultViewModel<List<Payment>>() {
-    private var startDate: Date = Date().plus(Calendar.MONTH, -1)
-    private var endDate: Date = Date()
-    private var order: Order = Order.BY_DATE_ASC
-    private var categoryId: Int? = null
-    private var useSubCategories: Boolean = true
+    private var filterPanelSettings: FilterPanelSettings? = null
 
-    override fun loadData(context: Context) =
-        MyExpenses.PaymentApi.getPayments(
+    fun setFilterPanelSettings(filterPanelSettings: FilterPanelSettings) {
+        this.filterPanelSettings = filterPanelSettings
+    }
+
+    override fun loadData(context: Context): Single<Result<List<Payment>>> {
+        val order: Order = Order.BY_DATE_ASC // TODO
+
+        val period = filterPanelSettings?.period?.getDates()
+        val dateStart = period?.first
+            ?: filterPanelSettings?.dateStart?.formatToDate() ?: Date()
+        val dateEnd = period?.second
+            ?: filterPanelSettings?.dateEnd?.formatToDate() ?: Date()
+        return MyExpenses.PaymentApi.getPayments(
             context,
-            startDate,
-            endDate,
+            dateStart,
+            dateEnd,
             order,
-            categoryId,
-            useSubCategories
+            filterPanelSettings?.category,
+            filterPanelSettings?.useSubcategories ?: true
         )
+    }
+
 }

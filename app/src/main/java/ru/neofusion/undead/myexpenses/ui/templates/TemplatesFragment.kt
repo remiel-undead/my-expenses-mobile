@@ -16,11 +16,11 @@ import ru.neofusion.undead.myexpenses.TemplateActivity
 import ru.neofusion.undead.myexpenses.domain.Template
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
-import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
+import ru.neofusion.undead.myexpenses.ui.BaseListResultViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
-class TemplatesFragment : BaseListViewModelFragment<Template>() {
+class TemplatesFragment : BaseListResultViewModelFragment<Template>() {
     companion object {
         private const val REQUEST_CODE_ADD_TEMPLATE = 1000
         private const val REQUEST_CODE_EDIT_TEMPLATE = 1001

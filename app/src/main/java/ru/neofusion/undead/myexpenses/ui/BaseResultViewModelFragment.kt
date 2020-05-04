@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import ru.neofusion.undead.myexpenses.domain.Result
 
-abstract class BaseViewModelFragment<T : Any?> : Fragment() {
+abstract class BaseResultViewModelFragment<T : Any?> : Fragment() {
     @LayoutRes
     abstract fun getLayoutResource(): Int
 

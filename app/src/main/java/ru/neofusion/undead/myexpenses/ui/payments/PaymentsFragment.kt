@@ -4,7 +4,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -13,17 +17,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.neofusion.undead.myexpenses.PaymentActivity
+import ru.neofusion.undead.myexpenses.PaymentFilterPanel
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.TemplateActivity
-import ru.neofusion.undead.myexpenses.domain.FilterPanelSettings
+import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Payment
 import ru.neofusion.undead.myexpenses.domain.Result
 import ru.neofusion.undead.myexpenses.repository.network.MyExpenses
-import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
-import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
-class PaymentsFragment : BaseListViewModelFragment<Payment>() {
+class PaymentsFragment : Fragment() {
     companion object {
         private const val REQUEST_CODE_EDIT_PAYMENT = 1000
         private const val REQUEST_CODE_ADD_PAYMENT = 1001
@@ -38,6 +41,9 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
 
     private lateinit var paymentsAdapter: PaymentsAdapter
     private lateinit var longClickOptions: Array<String>
+
+    private lateinit var paymentsViewModel: PaymentsViewModel
+    private lateinit var filterPanel: PaymentFilterPanel
 
     private val paymentLongClickListener = object : PaymentLongClickListener {
         override fun onPaymentLongClick(payment: Payment) {
@@ -77,10 +83,33 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
         }
     }
 
-    override val viewModel: ResultViewModel<List<Payment>>
-        get() = ViewModelProviders.of(this).get(PaymentsViewModel::class.java)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_base_list, container, false)
+        retainInstance = true
+        paymentsViewModel = ViewModelProviders.of(this).get(PaymentsViewModel::class.java)
+        paymentsViewModel.resultPayments.observe(this, Observer {
+            doOnPaymentsResult(it)
+        })
+        paymentsViewModel.resultCategories.observe(this, Observer {
+            doOnCategoriesResult(it)
+        })
+        return view
+    }
 
-    override fun doOnResult(result: Result<List<Payment>>) {
+    private fun doOnCategoriesResult(result: Result<List<Category>>) {
+        if (result is Result.Success) {
+            filterPanel.updateCategories(result.value)
+            loadPaymentsViewData()
+        } else{
+            UiHelper.snack(requireActivity(), (result as Result.Error).message)
+        }
+    }
+
+    private fun doOnPaymentsResult(result: Result<List<Payment>>) {
         if (result is Result.Success) {
             paymentsAdapter.setPayments(result.value)
             emptyListTextView.visibility = if (result.value.isEmpty()) View.VISIBLE else View.GONE
@@ -110,9 +139,30 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        filterPanel = PaymentFilterPanel(requireActivity().findViewById(R.id.slidingLayout))
+        filterPanel.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+
         filterPanel.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
 
-        initPanelControls()
+        filterPanel.findButton.setOnClickListener { loadPaymentsViewData() }
+
+        loadCategoriesViewData()
+    }
+
+    private fun loadPaymentsViewData() {
+        paymentsViewModel.subscribePayments(
+            requireContext(),
+            filterPanel.getSettings(),
+            { swipeRefreshLayout.isRefreshing = true },
+            { swipeRefreshLayout.isRefreshing = false })
+    }
+
+    private fun loadCategoriesViewData() {
+        paymentsViewModel.subscribeCategories(
+            requireContext(),
+            { filterPanel.findButton.isEnabled = false },
+            { filterPanel.findButton.isEnabled = true })
     }
 
     override fun onDetach() {
@@ -183,19 +233,5 @@ class PaymentsFragment : BaseListViewModelFragment<Payment>() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun initPanelControls() {
-        // TODO setup controls (categories, periods)
-        filterPanel.findButton.setOnClickListener {
-            (viewModel as PaymentsViewModel).setFilterPanelSettings(
-                FilterPanelSettings(
-                    filterPanel.datePickerStart.text.toString(),
-                    filterPanel.datePickerEnd.text.toString(),
-                    filterPanel.spinnerCategory.selectedItemId,
-                )
-            )
-            loadViewData()
-        }
     }
 }

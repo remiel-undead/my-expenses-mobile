@@ -12,11 +12,11 @@ import ru.neofusion.undead.myexpenses.CategoryActivity
 import ru.neofusion.undead.myexpenses.R
 import ru.neofusion.undead.myexpenses.domain.Category
 import ru.neofusion.undead.myexpenses.domain.Result
-import ru.neofusion.undead.myexpenses.ui.BaseListViewModelFragment
+import ru.neofusion.undead.myexpenses.ui.BaseListResultViewModelFragment
 import ru.neofusion.undead.myexpenses.ui.ResultViewModel
 import ru.neofusion.undead.myexpenses.ui.UiHelper
 
-class CategoriesFragment : BaseListViewModelFragment<Category>() {
+class CategoriesFragment : BaseListResultViewModelFragment<Category>() {
     companion object {
         private const val REQUEST_CODE_EDIT_CATEGORY = 1000
         private const val REQUEST_CODE_ADD_CATEGORY = 1001
